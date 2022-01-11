@@ -1,0 +1,129 @@
+html {
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #1B0550;
+    margin: 0;
+}
+
+h1 {
+    font-size: 3rem;
+}
+
+.c-scoreboard {
+    align-items: center;
+    border: 10px solid white;
+    width: 800px;
+    height: 300px;
+}
+
+.c-color-score {
+    display: flex;
+    width: 800px;
+}
+
+.c-setter {
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+    background-color: #B9CC16;
+}
+
+.c-team {
+    display: flex;  
+    align-items: center;
+    justify-content: space-between;
+    background-color: #00938D;
+    padding: 0 3rem;
+    width: 618px;
+    /* border: 5px solid white; */
+}
+
+
+.c-color-team {
+    border-right: 10px solid white;
+}
+
+.c-color-team-1 {
+    width: 140px;
+    height: 145px;
+    border-bottom: 5px solid white;
+    background-color: red;
+}
+
+.c-color-team-2 {
+    width: 140px;
+    height: 145px;  
+    border-top: 5px solid white;
+    background-color: blue;
+}
+
+
+.c-points {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.c-points-bg {
+    display: flex;
+    width: 5rem;
+    height: 5rem;
+    background-color: #FEDF2D;
+    color: #1B0550;
+    align-items: center;
+    justify-content: center;
+}
+
+.c-sponsors {
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    width: 820px;
+}
+
+.c-sponsor-board {
+    font-size: 1.25rem;
+    padding: 1rem;
+    text-align: center;
+    color: #1B0550;
+    background-color: rgb(255, 255, 255);
+}
+
+.o-set1-1 {
+    visibility: visible;
+    color: white;
+}
+
+.o-set1-2 {
+    visibility: visible;
+    color: white;
+}
+
+.o-set2-1 {
+    visibility: hidden;
+    color: white;
+}
+
+.o-set2-2 {
+    visibility: hidden;
+    color: white;
+}
+
+.o-set3-2 {
+    visibility: hidden;
+    color: white;
+}
+
+.o-set3-1 {
+    visibility: hidden;
+    color: white;
+}
