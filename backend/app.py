@@ -5,6 +5,7 @@ from flask import Flask, jsonify
 from flask_socketio import SocketIO, emit, send
 from flask_cors import CORS
 import threading
+import serial
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'geheim!'
@@ -35,6 +36,8 @@ Set = 0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
+ser = serial.Serial('/dev/rfcomm0')
+ser.isOpen()
 
 def points_team1_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
@@ -265,6 +268,9 @@ def points_team2_down():
 
 def score():
     while True:
+        tekst = ser.readline()
+        print(len(tekst))
+
         if GPIO.input(knop1up) == 0:
             points_team1_up()
             time.sleep(0.2)
@@ -280,6 +286,13 @@ def score():
         elif GPIO.input(knop2down) == 0:
             points_team2_down()
             time.sleep(0.2)
+        # if len(tekst) == 12:
+        #     points_team1_up()
+        # elif len(tekst) == 13:
+        #     points_team2_up()
+
+        # time.sleep(0.1)
+
 
 thread1 = threading.Timer(0.1, score)
 thread1.start()
