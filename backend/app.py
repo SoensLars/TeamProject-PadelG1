@@ -53,13 +53,13 @@ def input_and_send():
         
 def rx_and_echo():
     global messageEsp
-    sock.send("\nconnected\n")
     while True:
         messageEsp = sock.recv(buf_size)
         return messageEsp
             
 #MAC address of ESP32
-addr = "08:3A:F2:AC:2A:DE"
+# addr = "08:3A:F2:AC:2A:DE" # Thomas
+addr = "24:62:AB:FD:24:9E" # Lars
 #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 #service_matches = find_service( uuid = uuid, address = addr )
 service_matches = find_service( address = addr )
@@ -70,9 +70,9 @@ if len(service_matches) == 0:
     print("couldn't find the SampleServer service =(")
     sys.exit(0)
 
-for s in range(len(service_matches)):
-    print("\nservice_matches: [" + str(s) + "]:")
-    print(service_matches[s])
+# for s in range(len(service_matches)):
+#     print("\nservice_matches: [" + str(s) + "]:")
+#     print(service_matches[s])
     
 first_match = service_matches[0]
 port = first_match["port"]
@@ -80,13 +80,14 @@ name = first_match["name"]
 host = first_match["host"]
 
 port=1
-print("connecting to \"%s\" on %s, port %s" % (name, host, port))
+# print("connecting to \"%s\" on %s, port %s" % (name, host, port))
 
 # Create the client socket
 sock=BluetoothSocket(RFCOMM)
 sock.connect((host, port))
 
-print("connected")
+sock.send("\nconnected\n")
+print("Connected to esp32")
 #endregion
 
 def points_team1_up():
@@ -313,32 +314,23 @@ def score():
     while True:
 
         message = rx_and_echo()
-        # tekst = ser.readline()
-        print(len(message))
+        # print((message))
 
         # if GPIO.input(knop1up) == 0:
-        if len(message) == 12:
+        if message == b'teamRoodUp':
             points_team1_up()
-            time.sleep(0.2)
 
         # elif GPIO.input(knop2up) == 0:
-        elif len(message) == 13:
+        elif message == b'teamBlauwUp':
             points_team2_up()
-            time.sleep(0.2)
 
         # elif GPIO.input(knop1down) == 0:
-        elif len(message) == 14:
+        elif message == b'teamRoodDown':
             points_team1_down()
-            time.sleep(0.2)
 
         # elif GPIO.input(knop2down) == 0:
-        elif len(message) == 15:
+        elif message == b'teamBlauwDown':
             points_team2_down()
-            time.sleep(0.2)
-        # if len(tekst) == 12:
-        #     points_team1_up()
-        # elif len(tekst) == 13:
-        #     points_team2_up()
 
         time.sleep(0.1)
 
