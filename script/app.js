@@ -26,6 +26,7 @@ function listenToSocket () {
         gamesSet2Team1.innerHTML = games1Set2
         gamesSet3Team1.innerHTML = games1Set3
 
+        console.log(sets)
         if (sets == 1)   {
             set2ObjectTeam1.style.visibility  = "visible"
             set2ObjectTeam2.style.visibility  = "visible"
