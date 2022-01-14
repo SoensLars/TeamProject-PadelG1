@@ -6,13 +6,20 @@ const socketio = io(`http://${lanIP}`);
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1
 var pointsTeam2, currentGames2, gamesSet1Team2, gamesSet2Team2, gamesSet3Team2, setsTeam2
 
+// let set1ObjectTeam1, set2ObjectTeam1, set3ObjectTeam1
+// let set1ObjectTeam2, set2ObjectTeam2, set3ObjectTeam2
+
 var sets
 var points1, currentGames1, games1Set1, games1Set2, games1Set3
 var points2, currentGames2, games2Set1, games2Set2, games2Set3
 
-const yellow = "#FEDF2D";
-
 function listenToSocket () {
+    socketio.on('B2F_esp_no_connection', function () {
+        console.log('No esp connection')
+    })
+    socketio.on('B2F_esp_connection', function () {
+        console.log('Esp connected')
+    })
     socketio.on('B2F_points_team1', function (payload) {
         points1 = payload['points']
         currentGames1 = payload['games']
@@ -27,33 +34,33 @@ function listenToSocket () {
 
         console.log(sets)
         if (sets == 1)   {
-            gamesSet2Team1.style.visibility  = "visible"
-            gamesSet2Team2.style.visibility  = "visible"
+            gamesSet2Team1.style.display  = "block"
+            gamesSet2Team2.style.display  = "block"
             if (games1Set1 > games2Set1) {
-                gamesSet1Team1.style.color  = yellow;
+                gamesSet1Team1.style.color  = "#FEDF2D"
             }
             else {
-                gamesSet1Team2.style.color  = yellow
+                gamesSet1Team2.style.color  = "#FEDF2D"
             }
         }   
 
         if (sets == 2)   {
-            gamesSet3Team1.style.visibility  = "visible"
-            gamesSet3Team2.style.visibility  = "visible"
+            gamesSet3Team1.style.display  = "block"
+            gamesSet3Team2.style.display  = "block"
             if (games1Set2 > games2Set2) {
-                gamesSet2Team1.style.color  = yellow
+                gamesSet2Team1.style.color  = "#FEDF2D"
             }
             else {
-                gamesSet2Team2.style.color  = yellow
+                gamesSet2Team2.style.color  = "#FEDF2D"
             }
         }
 
         if (sets == 3)   {
             if (games1Set3 > games2Set3) {
-                gamesSet3Team1.style.color  = yellow
+                gamesSet3Team1.style.color  = "#FEDF2D"
             }
             else {
-                gamesSet3Team2.style.color  = yellow
+                gamesSet3Team2.style.color  = "#FEDF2D"
             }
         }
     });
@@ -95,6 +102,17 @@ function init () {
     gamesSet1Team2 = document.querySelector('.js-games-set1-2')
     gamesSet2Team2 = document.querySelector('.js-games-set2-2')
     gamesSet3Team2 = document.querySelector('.js-games-set3-2')
+
+    // set1ObjectTeam1 = document.querySelector('.o-set1-1')
+    // set2ObjectTeam1 = document.querySelector('.o-set2-1')
+    // set3ObjectTeam1 = document.querySelector('.o-set3-1')
+    // set1ObjectTeam2 = document.querySelector('.o-set1-2')
+    // set2ObjectTeam2 = document.querySelector('.o-set2-2')
+    // set3ObjectTeam2 = document.querySelector('.o-set3-2')
+    // gamesObject1 = document.querySelector('.o-games-1')
+    // gamesObject2 = document.querySelector('.o-games-2')
+    // setsObject1 = document.querySelector('.o-sets-1')
+    // setsObject2 = document.querySelector('.o-sets-2')
 
     console.log(window.location.hostname)
     listenToSocket()

@@ -66,13 +66,18 @@ service_matches = find_service( address = addr )
 
 buf_size = 1024;
 
-if len(service_matches) == 0:
+while len(service_matches) == 0:
+    service_matches = find_service( address = addr )
     print("couldn't find the SampleServer service =(")
-    sys.exit(0)
+    socketio.emit('B2F_esp_no_connection')    
 
-# for s in range(len(service_matches)):
-#     print("\nservice_matches: [" + str(s) + "]:")
-#     print(service_matches[s])
+# if len(service_matches) == 0:
+#     print("couldn't find the SampleServer service =(")
+#     sys.exit(0)
+
+for s in range(len(service_matches)):
+    print("\nservice_matches: [" + str(s) + "]:")
+    print(service_matches[s])
     
 first_match = service_matches[0]
 port = first_match["port"]
@@ -88,175 +93,293 @@ sock.connect((host, port))
 
 sock.send("\nconnected\n")
 print("Connected to esp32")
+socketio.emit('B2F_esp_connection') 
 #endregion
 
 def points_team1_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
-    if GamesTeam1 < 6:
-        if PointsTeam1 == 0 or PointsTeam1 == 15:
-                PointsTeam1 += 15
+
+    # Punten verhogen voor 1 game als het aantal games lager is dan 5
+    if GamesTeam1 < 5:
+        if PointsTeam1 == 0:
+            PointsTeam1 = 15
+        elif PointsTeam1 == 15:
+            PointsTeam1 = 30
         elif PointsTeam1 == 30:
-                PointsTeam1 += 10
+            PointsTeam1 = 40
         elif PointsTeam1 == 40:
             if PointsTeam2 != 40:
+                GamesTeam1 += 1
                 PointsTeam1 = 0
                 PointsTeam2 = 0
-                GamesTeam1 += 1
                 if Set == 0:
                     GamesTeam1Set1 += 1
                 elif Set == 1:
                     GamesTeam1Set2 += 1
                 elif Set == 2:
-                    GamesTeam1Set3 += 1                
+                    GamesTeam1Set3 += 1
             else:
                 PointsTeam1 = "AD"
                 PointsTeam2 = "-"
         elif PointsTeam1 == "AD":
+            GamesTeam1 += 1
             PointsTeam1 = 0
             PointsTeam2 = 0
-            GamesTeam1 += 1
             if Set == 0:
                 GamesTeam1Set1 += 1
             elif Set == 1:
                 GamesTeam1Set2 += 1
             elif Set == 2:
-                GamesTeam1Set3 += 1  
-        elif PointsTeam2 == "AD":
-            PointsTeam1 = 40
-            PointsTeam2 = 40
-    elif GamesTeam1 == 6 and GamesTeam2 <= 4:
-        if PointsTeam1 == 0 or PointsTeam1 == 15:
-                PointsTeam1 += 15
+                GamesTeam1Set3 += 1
+    # Als het aantal gewonnen games 5 is en het aantal gewonnen games van team 2 lager dan 5, set verhogen   
+    elif GamesTeam1 == 5 and GamesTeam2 <= 4:
+        if PointsTeam1 == 0:
+            PointsTeam1 = 15
+        elif PointsTeam1 == 15:
+            PointsTeam1 = 30
         elif PointsTeam1 == 30:
-                PointsTeam1 += 10
+            PointsTeam1 = 40
         elif PointsTeam1 == 40:
             if PointsTeam2 != 40:
-                PointsTeam1 = 0
-                PointsTeam2 = 0
                 GamesTeam1 = 0
                 GamesTeam2 = 0
-                Set += 1
+                PointsTeam1 = 0
+                PointsTeam2 = 0
                 if Set == 0:
                     GamesTeam1Set1 += 1
                 elif Set == 1:
                     GamesTeam1Set2 += 1
                 elif Set == 2:
-                    GamesTeam1Set3 += 1 
+                    GamesTeam1Set3 += 1
+                Set += 1
             else:
                 PointsTeam1 = "AD"
                 PointsTeam2 = "-"
         elif PointsTeam1 == "AD":
+            GamesTeam1 = 0
+            GamesTeam2 = 0
             PointsTeam1 = 0
             PointsTeam2 = 0
-            GamesTeam1  = 0
-            GamesTeam2 = 0
-            Set += 1
             if Set == 0:
                 GamesTeam1Set1 += 1
             elif Set == 1:
                 GamesTeam1Set2 += 1
             elif Set == 2:
-                GamesTeam1Set3 += 1 
-        elif PointsTeam2 == "AD":
-            PointsTeam1 = 40
-            PointsTeam2 = 40
-
-    # if Set == 2:
-    #     if GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2:
-    #         print('Geen 3e set')
-    #     elif GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2:
-    #         print('Geen 3e set')
-    #     else:
-    #         print('Speel 3e set')
+                GamesTeam1Set3 += 1
+            Set += 1    
+    elif GamesTeam1 >= 5 and GamesTeam2 > 4:
+        if ((GamesTeam1 - GamesTeam2) < 1): # Geen verschil van 2, dus doorspelen
+            if PointsTeam1 == 0:
+                PointsTeam1 = 15
+            elif PointsTeam1 == 15:
+                PointsTeam1 = 30
+            elif PointsTeam1 == 30:
+                PointsTeam1 = 40
+            elif PointsTeam1 == 40:
+                if PointsTeam2 != 40:
+                    GamesTeam1 += 1
+                    PointsTeam1 = 0
+                    PointsTeam2 = 0
+                    if Set == 0:
+                        GamesTeam1Set1 += 1
+                    elif Set == 1:
+                        GamesTeam1Set2 += 1
+                    elif Set == 2:
+                        GamesTeam1Set3 += 1
+                else:
+                    PointsTeam1 = "AD"
+                    PointsTeam2 = "-"
+            elif PointsTeam1 == "AD":
+                GamesTeam1 += 1
+                PointsTeam1 = 0
+                PointsTeam2 = 0
+                if Set == 0:
+                    GamesTeam1Set1 += 1
+                elif Set == 1:
+                    GamesTeam1Set2 += 1
+                elif Set == 2:
+                    GamesTeam1Set3 += 1    
+        else: # Wel een verschil van 2 dus set verhogen
+            if PointsTeam1 == 0:
+                PointsTeam1 = 15
+            elif PointsTeam1 == 15:
+                PointsTeam1 = 30
+            elif PointsTeam1 == 30:
+                PointsTeam1 = 40
+            elif PointsTeam1 == 40:
+                if PointsTeam2 != 40:
+                    GamesTeam1 = 0
+                    GamesTeam2 = 0
+                    PointsTeam1 = 0
+                    PointsTeam2 = 0
+                    if Set == 0:
+                        GamesTeam1Set1 += 1
+                    elif Set == 1:
+                        GamesTeam1Set2 += 1
+                    elif Set == 2:
+                        GamesTeam1Set3 += 1
+                    Set += 1
+                else:
+                    PointsTeam1 = "AD"
+                    PointsTeam2 = "-"
+            elif PointsTeam1 == "AD":
+                GamesTeam1 = 0
+                GamesTeam2 = 0
+                PointsTeam1 = 0
+                PointsTeam2 = 0
+                if Set == 0:
+                    GamesTeam1Set1 += 1
+                elif Set == 1:
+                    GamesTeam1Set2 += 1
+                elif Set == 2:
+                    GamesTeam1Set3 += 1
+                Set += 1 
+        
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2})
     # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
     print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
-    print(f"") 
+
 
 def points_team2_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
-    print("Score team 2, punt omhoog")
-    if GamesTeam2 < 6:
-        if PointsTeam2 == 0 or PointsTeam2 == 15:
-            PointsTeam2 += 15
+    
+    if GamesTeam2 < 5:
+        if PointsTeam2 == 0:
+            PointsTeam2 = 15
+        elif PointsTeam2 == 15:
+            PointsTeam2 = 30
         elif PointsTeam2 == 30:
-            PointsTeam2 += 10
+            PointsTeam2 = 40
         elif PointsTeam2 == 40:
             if PointsTeam1 != 40:
-                PointsTeam1 = 0
-                PointsTeam2 = 0
                 GamesTeam2 += 1
+                PointsTeam2 = 0
+                PointsTeam1 = 0
                 if Set == 0:
                     GamesTeam2Set1 += 1
                 elif Set == 1:
                     GamesTeam2Set2 += 1
                 elif Set == 2:
-                    GamesTeam2Set3 += 1 
+                    GamesTeam2Set3 += 1
             else:
                 PointsTeam2 = "AD"
                 PointsTeam1 = "-"
         elif PointsTeam2 == "AD":
+            GamesTeam2 += 1
             PointsTeam1 = 0
             PointsTeam2 = 0
-            GamesTeam2 += 1
             if Set == 0:
                 GamesTeam2Set1 += 1
             elif Set == 1:
                 GamesTeam2Set2 += 1
             elif Set == 2:
-                GamesTeam2Set3 += 1 
-        elif PointsTeam1 == "AD":
-            PointsTeam1 = 40
-            PointsTeam2 = 40
-    elif GamesTeam2 == 6 and GamesTeam1 <= 4:
-        if PointsTeam2 == 0 or PointsTeam2 == 15:
-            PointsTeam2 += 15
+                GamesTeam2Set3 += 1
+    # Als het aantal gewonnen games 5 is en het aantal gewonnen games van team 1 lager dan 5, set verhogen   
+    elif GamesTeam2 == 5 and GamesTeam1 <= 4:
+        if PointsTeam2 == 0:
+            PointsTeam2 = 15
+        elif PointsTeam2 == 15:
+            PointsTeam2 = 30
         elif PointsTeam2 == 30:
-            PointsTeam2 += 10
+            PointsTeam2 = 40
         elif PointsTeam2 == 40:
             if PointsTeam1 != 40:
-                PointsTeam1 = 0
-                PointsTeam2 = 0
                 GamesTeam1 = 0
                 GamesTeam2 = 0
-                Set += 1
+                PointsTeam1 = 0
+                PointsTeam2 = 0
                 if Set == 0:
                     GamesTeam2Set1 += 1
                 elif Set == 1:
                     GamesTeam2Set2 += 1
                 elif Set == 2:
-                    GamesTeam2Set3 += 1 
+                    GamesTeam2Set3 += 1
+                Set += 1
             else:
                 PointsTeam2 = "AD"
                 PointsTeam1 = "-"
         elif PointsTeam2 == "AD":
-            PointsTeam1 = 0
-            PointsTeam2 = 0
             GamesTeam1 = 0
             GamesTeam2 = 0
-            Set += 1
+            PointsTeam1 = 0
+            PointsTeam2 = 0
             if Set == 0:
                 GamesTeam2Set1 += 1
             elif Set == 1:
                 GamesTeam2Set2 += 1
             elif Set == 2:
-                GamesTeam2Set3 += 1 
-        elif PointsTeam1 == "AD":
-            PointsTeam1 = 40
-            PointsTeam2 = 40
-    elif GamesTeam1 == 6 and GamesTeam2 == 6:
-        PointsTeam1 += 1
-
-    # if Set == 2:
-    #     if GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2:
-    #         print('Geen 3e set')
-    #     elif GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2:
-    #         print('Geen 3e set')
-    #     else:
-    #         print('Speel 3e set')
+                GamesTeam2Set3 += 1
+            Set += 1    
+    elif GamesTeam2 >= 5 and GamesTeam1 > 4:
+        if ((GamesTeam2 - GamesTeam1) < 1): # Geen verschil van 2, dus doorspelen
+            if PointsTeam2 == 0:
+                PointsTeam2 = 15
+            elif PointsTeam2 == 15:
+                PointsTeam2 = 30
+            elif PointsTeam2 == 30:
+                PointsTeam2 = 40
+            elif PointsTeam2 == 40:
+                if PointsTeam1 != 40:
+                    GamesTeam2 += 1
+                    PointsTeam1 = 0
+                    PointsTeam2 = 0
+                    if Set == 0:
+                        GamesTeam2Set1 += 1
+                    elif Set == 1:
+                        GamesTeam2Set2 += 1
+                    elif Set == 2:
+                        GamesTeam2Set3 += 1
+                else:
+                    PointsTeam2 = "AD"
+                    PointsTeam1 = "-"
+            elif PointsTeam2 == "AD":
+                GamesTeam2 += 1
+                PointsTeam1 = 0
+                PointsTeam2 = 0
+                if Set == 0:
+                    GamesTeam2Set1 += 1
+                elif Set == 1:
+                    GamesTeam2Set2 += 1
+                elif Set == 2:
+                    GamesTeam2Set3 += 1    
+        else: # Wel een verschil van 2 dus set verhogen
+            if PointsTeam2 == 0:
+                PointsTeam2 = 15
+            elif PointsTeam2 == 15:
+                PointsTeam2 = 30
+            elif PointsTeam2 == 30:
+                PointsTeam2 = 40
+            elif PointsTeam2 == 40:
+                if PointsTeam1 != 40:
+                    GamesTeam1 = 0
+                    GamesTeam2 = 0
+                    PointsTeam1 = 0
+                    PointsTeam2 = 0
+                    if Set == 0:
+                        GamesTeam2Set1 += 1
+                    elif Set == 1:
+                        GamesTeam2Set2 += 1
+                    elif Set == 2:
+                        GamesTeam2Set3 += 1
+                    Set += 1
+                else:
+                    PointsTeam2 = "AD"
+                    PointsTeam1 = "-"
+            elif PointsTeam2 == "AD":
+                GamesTeam1 = 0
+                GamesTeam2 = 0
+                PointsTeam1 = 0
+                PointsTeam2 = 0
+                if Set == 0:
+                    GamesTeam2Set1 += 1
+                elif Set == 1:
+                    GamesTeam2Set2 += 1
+                elif Set == 2:
+                    GamesTeam2Set3 += 1
+                Set += 1 
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2})
@@ -310,7 +433,6 @@ def points_team2_down():
     print(f"") 
 
 def score():
-    # hallo = rx_and_echo()
     while True:
 
         message = rx_and_echo()

@@ -30,13 +30,6 @@ h1 {
     width: 800px;
 }
 
-.c-setter {
-    height: 25px;
-    width: 25px;
-    border-radius: 100%;
-    background-color: #B9CC16;
-}
-
 .c-team {
     display: flex;  
     align-items: center;
@@ -99,31 +92,53 @@ h1 {
 }
 
 .o-set1-1 {
-    visibility: visible;
+    display: block;
     color: white;
 }
 
 .o-set1-2 {
-    visibility: visible;
+    display: block;
     color: white;
 }
 
 .o-set2-1 {
-    visibility: hidden;
+    display: none;
     color: white;
 }
 
 .o-set2-2 {
-    visibility: hidden;
+    display: none;
     color: white;
 }
 
 .o-set3-2 {
-    visibility: hidden;
+    display: none;
     color: white;
 }
 
 .o-set3-1 {
-    visibility: hidden;
+    display: none;
     color: white;
+}
+
+.c-serve-1 {
+    height: 30px;
+    width: 30px;
+    background-color: #FEDF2D;
+    border-radius: 100%;
+    visibility: hidden;
+}
+
+.c-serve-2 {
+    height: 30px;
+    width: 30px;
+    background-color: #FEDF2D;
+    border-radius: 100%;
+    visibility: hidden;
+}
+
+.c-team-serve {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
