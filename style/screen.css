@@ -142,3 +142,28 @@ h1 {
     align-items: center;
     gap: 1rem;
 }
+
+.c-loader {
+  border: 1rem solid #f3f3f3; /* Light grey */
+  border-top: 1rem solid #00938D;
+  border-radius: 50%;
+  width: 8rem;
+  height: 8rem;
+  animation: spin 2s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.c-loading{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.c-span--on{
+    color: #FEDF2D;
+}

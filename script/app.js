@@ -19,6 +19,7 @@ function listenToSocket () {
     })
     socketio.on('B2F_esp_connection', function () {
         console.log('Esp connected')
+        window.location.href = "pages/scoreboard.html";
     })
     socketio.on('B2F_points_team1', function (payload) {
         points1 = payload['points']
