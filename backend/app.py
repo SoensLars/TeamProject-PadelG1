@@ -42,7 +42,10 @@ GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.
 # ser = serial.Serial('/dev/rfcomm0')
 # ser.isOpen()
 
-#region -- Code ESP Connection    
+#region -- Code ESP Connection   
+sock=BluetoothSocket(RFCOMM)
+buf_size = 1024;
+
 def input_and_send():
     print("\nType something\n")
     while True:
@@ -57,43 +60,44 @@ def rx_and_echo():
         messageEsp = sock.recv(buf_size)
         return messageEsp
             
-#MAC address of ESP32
-# addr = "08:3A:F2:AC:2A:DE" # Thomas
-addr = "24:62:AB:FD:24:9E" # Lars
-#uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-#service_matches = find_service( uuid = uuid, address = addr )
-service_matches = find_service( address = addr )
-
-buf_size = 1024;
-
-while len(service_matches) == 0:
+def esp_connection():
+    #MAC address of ESP32
+    # addr = "08:3A:F2:AC:2A:DE" # Thomas
+    addr = "24:62:AB:FD:24:9E" # Lars
+    #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+    #service_matches = find_service( uuid = uuid, address = addr )
     service_matches = find_service( address = addr )
-    print("couldn't find the SampleServer service =(")
-    socketio.emit('B2F_esp_no_connection')    
 
-# if len(service_matches) == 0:
-#     print("couldn't find the SampleServer service =(")
-#     sys.exit(0)
 
-for s in range(len(service_matches)):
-    print("\nservice_matches: [" + str(s) + "]:")
-    print(service_matches[s])
-    
-first_match = service_matches[0]
-port = first_match["port"]
-name = first_match["name"]
-host = first_match["host"]
+    while len(service_matches) == 0:
+        service_matches = find_service( address = addr )
+        print("couldn't find the SampleServer service =(")
+        socketio.emit('B2F_esp_no_connection')    
 
-port=1
-# print("connecting to \"%s\" on %s, port %s" % (name, host, port))
+    # if len(service_matches) == 0:
+    #     print("couldn't find the SampleServer service =(")
+    #     sys.exit(0)
 
-# Create the client socket
-sock=BluetoothSocket(RFCOMM)
-sock.connect((host, port))
+    for s in range(len(service_matches)):
+        print("\nservice_matches: [" + str(s) + "]:")
+        print(service_matches[s])
+        
+    first_match = service_matches[0]
+    port = first_match["port"]
+    name = first_match["name"]
+    host = first_match["host"]
 
-sock.send("\nconnected\n")
-print("Connected to esp32")
-socketio.emit('B2F_esp_connection') 
+    port=1
+    # print("connecting to \"%s\" on %s, port %s" % (name, host, port))
+
+    # Create the client socket
+    sock.connect((host, port))
+
+    sock.send("\nconnected\n")
+    print("Connected to esp32")
+    socketio.emit('B2F_esp_connection') 
+
+
 #endregion
 
 def points_team1_up():
@@ -241,7 +245,6 @@ def points_team1_up():
     # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
     print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
-
 
 def points_team2_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
@@ -433,6 +436,8 @@ def points_team2_down():
     print(f"") 
 
 def score():
+    esp_connection()
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
     while True:
 
         message = rx_and_echo()
