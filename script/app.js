@@ -11,6 +11,7 @@ var pointsTeam2, currentGames2, gamesSet1Team2, gamesSet2Team2, gamesSet3Team2, 
 var sets
 var points1, currentGames1, games1Set1, games1Set2, games1Set3
 var points2, currentGames2, games2Set1, games2Set2, games2Set3
+var stateService
 
 let serveTeam1, serveTeam2
 
@@ -26,12 +27,12 @@ function listenToSocket () {
         servePage.style.display = "none"
         scoreboardPage.style.display = "block"
         //laad scoreboard pagina
-        if (payload["team"] == "rood"){
+        if (payload == true){
             console.log("team rood mag beginnen met serveren.")
             serveTeam1.style.visibility = "visible"
             //padelbal in scoreboard aanpassen naar rode team
         }
-        else if (payload["team"] == "blauw"){
+        else if (payload == false){
             console.log("team blauw mag beginnen met serveren.")
             serveTeam2.style.visibility = "visible"
             //padelbal in scoreboard aanpassen naar blauwe team
@@ -44,6 +45,8 @@ function listenToSocket () {
         games1Set2 = payload['gamesSet2']
         games1Set3 = payload['gamesSet3']
         sets = payload['sets']
+        stateService = payload['stateService']
+        console.log(`State service is ${stateService}`)
         pointsTeam1.innerHTML = points1
         gamesSet1Team1.innerHTML = games1Set1
         gamesSet2Team1.innerHTML = games1Set2
@@ -99,6 +102,15 @@ function listenToSocket () {
             // scoreboardPage.style.display = "none"
             // winnerPage.style.display = "block"
         }
+
+        if (stateService == true) {
+            serveTeam1.style.visibility = "visible"
+            serveTeam2.style.visibility = "hidden"
+        }
+        else {
+            serveTeam1.style.visibility = "hidden"
+            serveTeam2.style.visibility = "visible"
+        }
     });
     socketio.on('B2F_points_team2', function (payload) {
         points2 = payload['points']
@@ -107,6 +119,7 @@ function listenToSocket () {
         games2Set2 = payload['gamesSet2']
         games2Set3 = payload['gamesSet3']
         sets = payload['sets']
+        stateService = payload['stateService']
         pointsTeam2.innerHTML = points2
         gamesSet1Team2.innerHTML = games2Set1
         gamesSet2Team2.innerHTML = games2Set2
@@ -155,6 +168,15 @@ function listenToSocket () {
                 gamesSet3Team2.style.color  = "#FEDF2D"
             }
         }  
+
+        if (stateService == true) {
+            serveTeam1.style.visibility = "visible"
+            serveTeam2.style.visibility = "hidden"
+        }
+        else {
+            serveTeam1.style.visibility = "hidden"
+            serveTeam2.style.visibility = "visible"
+        }
     });
 }
 
