@@ -35,6 +35,9 @@ GamesTeam2Set3 = 0
 
 Set = 0
 
+stateServiceTeam1 = False
+stateServiceTeam2 = False
+
 messageEsp = ""
 
 GPIO.setmode(GPIO.BCM)
@@ -60,14 +63,13 @@ def rx_and_echo():
         messageEsp = sock.recv(buf_size)
         return messageEsp
             
-def esp_connection():
+def esp_connection_start():
     #MAC address of ESP32
     # addr = "08:3A:F2:AC:2A:DE" # Thomas
     addr = "24:62:AB:FD:24:9E" # Lars
     #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
     #service_matches = find_service( uuid = uuid, address = addr )
     service_matches = find_service( address = addr )
-
 
     while len(service_matches) == 0:
         service_matches = find_service( address = addr )
@@ -95,9 +97,7 @@ def esp_connection():
 
     sock.send("\nconnected\n")
     print("Connected to esp32")
-    socketio.emit('B2F_esp_connection') 
-
-
+    socketio.emit('B2F_esp_connection')
 #endregion
 
 def points_team1_up():
@@ -436,8 +436,8 @@ def points_team2_down():
     print(f"") 
 
 def score():
-    esp_connection()
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
+    esp_connection_start()
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2
     while True:
 
         message = rx_and_echo()
@@ -445,11 +445,21 @@ def score():
 
         # if GPIO.input(knop1up) == 0:
         if message == b'teamRoodUp':
-            points_team1_up()
+            if stateServiceTeam1 == False:
+                stateServiceTeam1 = True
+                stateServiceTeam2 = True
+                socketio.emit('B2F_serve', {'team': 'rood'})
+            else:
+                points_team1_up()
 
         # elif GPIO.input(knop2up) == 0:
         elif message == b'teamBlauwUp':
-            points_team2_up()
+            if stateServiceTeam2 == False:
+                stateServiceTeam1 = True
+                stateServiceTeam2 = True
+                socketio.emit('B2F_serve', {'team': 'blauw'})
+            else:
+                points_team2_up()
 
         # elif GPIO.input(knop1down) == 0:
         elif message == b'teamRoodDown':
