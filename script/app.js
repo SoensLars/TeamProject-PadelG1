@@ -3,15 +3,16 @@
 const lanIP = `${window.location.hostname}:5000`;
 const socketio = io(`http://${lanIP}`);
 
+let scoreboardPage, servePage
+
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1
 var pointsTeam2, currentGames2, gamesSet1Team2, gamesSet2Team2, gamesSet3Team2, setsTeam2
-
-// let set1ObjectTeam1, set2ObjectTeam1, set3ObjectTeam1
-// let set1ObjectTeam2, set2ObjectTeam2, set3ObjectTeam2
 
 var sets
 var points1, currentGames1, games1Set1, games1Set2, games1Set3
 var points2, currentGames2, games2Set1, games2Set2, games2Set3
+
+let serveTeam1, serveTeam2
 
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
@@ -20,6 +21,21 @@ function listenToSocket () {
     socketio.on('B2F_esp_connection', function () {
         console.log('Esp connected')
         window.location.href = "pages/scoreboard.html";
+    })
+    socketio.on('B2F_serve', function (payload) {
+        servePage.style.display = "none"
+        scoreboardPage.style.display = "block"
+        //laad scoreboard pagina
+        if (payload["team"] == "rood"){
+            console.log("team rood mag beginnen met serveren.")
+            serveTeam1.style.visibility = "visible"
+            //padelbal in scoreboard aanpassen naar rode team
+        }
+        else if (payload["team"] == "blauw"){
+            console.log("team blauw mag beginnen met serveren.")
+            serveTeam2.style.visibility = "visible"
+            //padelbal in scoreboard aanpassen naar blauwe team
+        }
     })
     socketio.on('B2F_points_team1', function (payload) {
         points1 = payload['points']
@@ -92,6 +108,9 @@ function listenToSocket () {
 }
 
 function init () {
+    scoreboardPage = document.querySelector('.js-scoreboard-page')
+    servePage = document.querySelector('.js-serve-page')
+
     pointsTeam1 = document.querySelector('.js-points-1')
     currentGames1 = document.querySelector('.js-games-1')
     gamesSet1Team1 = document.querySelector('.js-games-set1-1')
@@ -103,6 +122,9 @@ function init () {
     gamesSet1Team2 = document.querySelector('.js-games-set1-2')
     gamesSet2Team2 = document.querySelector('.js-games-set2-2')
     gamesSet3Team2 = document.querySelector('.js-games-set3-2')
+
+    serveTeam1 = document.querySelector('.js-serve-1')
+    serveTeam2 = document.querySelector('.js-serve-2')
 
     // set1ObjectTeam1 = document.querySelector('.o-set1-1')
     // set2ObjectTeam1 = document.querySelector('.o-set2-1')

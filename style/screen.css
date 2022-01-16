@@ -10,13 +10,29 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #1B0550;
+    background-color: #1b0550;
     margin: 0;
 }
 
 h1 {
     font-size: 3rem;
 }
+
+/*
+    ### Objects
+*/
+
+.o-scoreboard-page {
+    display: none;
+}
+
+.o-serve-page {
+    display: block;
+}
+
+/*
+    ### Elements
+*/
 
 .c-scoreboard {
     align-items: center;
@@ -31,15 +47,14 @@ h1 {
 }
 
 .c-team {
-    display: flex;  
+    display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #00938D;
+    background-color: #00938d;
     padding: 0 3rem;
     width: 618px;
     /* border: 5px solid white; */
 }
-
 
 .c-color-team {
     border-right: 10px solid white;
@@ -54,11 +69,10 @@ h1 {
 
 .c-color-team-2 {
     width: 140px;
-    height: 145px;  
+    height: 145px;
     border-top: 5px solid white;
     background-color: blue;
 }
-
 
 .c-points {
     display: flex;
@@ -70,8 +84,8 @@ h1 {
     display: flex;
     width: 5rem;
     height: 5rem;
-    background-color: #FEDF2D;
-    color: #1B0550;
+    background-color: #fedf2d;
+    color: #1b0550;
     align-items: center;
     justify-content: center;
 }
@@ -87,7 +101,7 @@ h1 {
     font-size: 1.25rem;
     padding: 1rem;
     text-align: center;
-    color: #1B0550;
+    color: #1b0550;
     background-color: rgb(255, 255, 255);
 }
 
@@ -124,7 +138,7 @@ h1 {
 .c-serve-1 {
     height: 30px;
     width: 30px;
-    background-color: #FEDF2D;
+    background-color: #fedf2d;
     border-radius: 100%;
     visibility: hidden;
 }
@@ -132,7 +146,7 @@ h1 {
 .c-serve-2 {
     height: 30px;
     width: 30px;
-    background-color: #FEDF2D;
+    background-color: #fedf2d;
     border-radius: 100%;
     visibility: hidden;
 }
@@ -144,26 +158,54 @@ h1 {
 }
 
 .c-loader {
-  border: 1rem solid #f3f3f3; /* Light grey */
-  border-top: 1rem solid #00938D;
-  border-radius: 50%;
-  width: 8rem;
-  height: 8rem;
-  animation: spin 2s linear infinite;
-  margin: auto;
+    border: 1rem solid #f3f3f3; /* Light grey */
+    border-top: 1rem solid #00938d;
+    border-radius: 50%;
+    width: 8rem;
+    height: 8rem;
+    animation: spin 2s linear infinite;
+    margin: auto;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-.c-loading{
+.c-loading {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-.c-span--on{
-    color: #FEDF2D;
+.c-span--on {
+    color: #fedf2d;
+}
+
+.c-span--serve {
+    color: #fedf2d;
+    font-size: 3rem;
+    font-weight: bold;
+}
+.c-serve{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 10vh;
+}
+
+.c-teambtn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.c-teambtn p{
+    font-size: 3rem;
+    font-weight: bold;
 }
