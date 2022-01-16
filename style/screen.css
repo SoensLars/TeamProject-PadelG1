@@ -30,6 +30,10 @@ h1 {
     display: block;
 }
 
+.o-winner-page {
+    display: none;
+}
+
 /*
     ### Elements
 */
@@ -37,13 +41,13 @@ h1 {
 .c-scoreboard {
     align-items: center;
     border: 10px solid white;
-    width: 800px;
+    width: 900px;
     height: 300px;
 }
 
 .c-color-score {
     display: flex;
-    width: 800px;
+    width: 900px;
 }
 
 .c-team {
@@ -52,7 +56,7 @@ h1 {
     justify-content: space-between;
     background-color: #00938d;
     padding: 0 3rem;
-    width: 618px;
+    width: 674px;
     /* border: 5px solid white; */
 }
 
@@ -94,7 +98,7 @@ h1 {
     padding-top: 2rem;
     display: flex;
     justify-content: space-between;
-    width: 820px;
+    width: 920px;
 }
 
 .c-sponsor-board {
@@ -154,7 +158,7 @@ h1 {
 .c-team-serve {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .c-loader {

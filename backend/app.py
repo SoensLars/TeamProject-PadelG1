@@ -42,8 +42,6 @@ messageEsp = ""
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
-# ser = serial.Serial('/dev/rfcomm0')
-# ser.isOpen()
 
 #region -- Code ESP Connection   
 sock=BluetoothSocket(RFCOMM)
@@ -445,21 +443,41 @@ def score():
 
         # if GPIO.input(knop1up) == 0:
         if message == b'teamRoodUp':
+            # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
             if stateServiceTeam1 == False:
                 stateServiceTeam1 = True
                 stateServiceTeam2 = True
                 socketio.emit('B2F_serve', {'team': 'rood'})
             else:
-                points_team1_up()
+                if Set == 2:
+                    # Controleren of er een eventuele derde set moet worden gespeeld
+                    if (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2) or (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2):
+                        print("Spel gedaan")
+                    else:
+                        points_team1_up()
+                elif Set == 3:
+                    print("Spel gedaan")
+                else:
+                    points_team1_up()
 
         # elif GPIO.input(knop2up) == 0:
         elif message == b'teamBlauwUp':
+            # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
             if stateServiceTeam2 == False:
                 stateServiceTeam1 = True
                 stateServiceTeam2 = True
                 socketio.emit('B2F_serve', {'team': 'blauw'})
             else:
-                points_team2_up()
+                if Set == 2:
+                    # Controleren of er een eventuele derde set moet worden gespeeld
+                    if (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2) or (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2):
+                        print("Spel gedaan")
+                    else:
+                        points_team2_up()
+                elif Set == 3:
+                    print("Spel gedaan")
+                else:
+                    points_team2_up()
 
         # elif GPIO.input(knop1down) == 0:
         elif message == b'teamRoodDown':
