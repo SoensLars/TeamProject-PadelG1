@@ -18,6 +18,10 @@ h1 {
     font-size: 3rem;
 }
 
+img {
+    height: 50px;
+}
+
 /*
     ### Objects
 */
@@ -104,6 +108,7 @@ h1 {
 .c-sponsor-board {
     font-size: 1.25rem;
     padding: 1rem;
+    align-items: center;
     text-align: center;
     color: #1b0550;
     background-color: rgb(255, 255, 255);
@@ -212,4 +217,39 @@ h1 {
 .c-teambtn p{
     font-size: 3rem;
     font-weight: bold;
+}
+
+.c-winner--title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 101rem;
+    height: 18.25rem;
+    background-color: #2d3cfe;
+    border-radius: 3rem;
+    border: 0.5rem solid white;
+    margin-bottom: 4rem;
+}
+
+.c-winner--title h1 {
+    font-size: 7rem;
+}
+
+.c-overview {
+    display: flex;
+    width: 102rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.c-logo {
+    width: 30rem;
+    height: 30rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 3rem;
+}
+
+.c-points--winner {
+    display: flex;
+    flex-direction: column;
 }

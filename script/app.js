@@ -14,6 +14,8 @@ var points2, currentGames2, games2Set1, games2Set2, games2Set3
 var stateService
 
 let serveTeam1, serveTeam2
+let winnerTeam, winnerTeamBg
+let pointsWinner1, pointsWinner2
 
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
@@ -39,6 +41,7 @@ function listenToSocket () {
         }
     })
     socketio.on('B2F_points_team1', function (payload) {
+        // Punten in scoreboard weergeven
         points1 = payload['points']
         currentGames1 = payload['games']
         games1Set1 = payload['gamesSet1']
@@ -52,7 +55,7 @@ function listenToSocket () {
         gamesSet2Team1.innerHTML = games1Set2
         gamesSet3Team1.innerHTML = games1Set3
 
-        console.log(sets)
+        // Games van set 2 weergeven
         if (sets == 1)   {
             gamesSet2Team1.style.display  = "block"
             gamesSet2Team2.style.display  = "block"
@@ -64,21 +67,30 @@ function listenToSocket () {
             }
         }   
 
+        // Games van set 3 weergeven indien de match niet beindigd is
         if (sets == 2)   {
+            // Match is beindigd
             if ((games1Set1 > games2Set1 && games1Set2 > games2Set2) || (games2Set1 > games1Set1 && games2Set2 > games1Set2)) {
                 gamesSet3Team1.style.display  = "hidden"
                 gamesSet3Team2.style.display  = "hidden"
+                scoreboardPage.style.display = "none"
+                winnerPage.style.display = "block"
                 if (games1Set2 > games2Set2) {
                     gamesSet2Team1.style.color  = "#FEDF2D"
+                    winnerTeam.innerHTML = "Red";
+                    winnerTeamBg.style.backgroundColor = "red";
+                    pointsWinner1.innerHTML = `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
+                    pointsWinner2.innerHTML = `<h1>${games2Set1}</h1><h1>${games2Set2}</h1>`
                 }
                 else {
                     gamesSet2Team2.style.color  = "#FEDF2D"
+                    winnerTeam.innerHTML = "Blue";
+                    winnerTeamBg.style.backgroundColor = "blue";
+                    pointsWinner1.innerHTML = `<h1>${games1Set1}</h1><h1>${games1Set2}</h1>`
+                    pointsWinner2.innerHTML = `<h1>${games2Set1}</h1><h1>${games2Set2+1}</h1>`
                 }
-                // winnerPage.innerHTML = "TEAM ... WON THE GAME"
-                // scoreboardPage.style.display = "none"
-                // winnerPage.style.display = "block"
-
             }
+            // Match is nog niet beindigd
             else {
                 gamesSet3Team1.style.display  = "block"
                 gamesSet3Team2.style.display  = "block"
@@ -92,15 +104,22 @@ function listenToSocket () {
         }
 
         if (sets == 3)   {
+            scoreboardPage.style.display = "none"
+            winnerPage.style.display = "block"
             if (games1Set3 > games2Set3) {
                 gamesSet3Team1.style.color  = "#FEDF2D"
+                winnerTeam.innerHTML = "Red";
+                winnerteamBg.style.backgroundColor = "red";
+                pointsWinner1.innerHTML = `<h1>${games1Set1}</h1><h1>${games1Set2}</h1><h1>${games1Set3+1}</h1>`
+                pointsWinner2.innerHTML = `<h1>${games2Set1}</h1><h1>${games2Set2}</h1><h1>${games2Set3}</h1>`
             }
             else {
                 gamesSet3Team2.style.color  = "#FEDF2D"
+                winnerTeam.innerHTML = "Blue";
+                winnerTeamBg.style.backgroundColor = "blue";
+                pointsWinner1.innerHTML = `<h1>${games1Set1}</h1><h1>${games1Set2}</h1><h1>${games1Set3}</h1>`
+                pointsWinner2.innerHTML = `<h1>${games2Set1}</h1><h1>${games2Set2}</h1><h1>${games2Set3+1}</h1>`
             }
-            // winnerPage.innerHTML = "TEAM ... WON THE GAME"
-            // scoreboardPage.style.display = "none"
-            // winnerPage.style.display = "block"
         }
 
         if (stateService == true) {
@@ -197,8 +216,14 @@ function init () {
     gamesSet2Team2 = document.querySelector('.js-games-set2-2')
     gamesSet3Team2 = document.querySelector('.js-games-set3-2')
 
-    serveTeam1 = document.querySelector('.js-serve-1')
-    serveTeam2 = document.querySelector('.js-serve-2')
+    serveTeam1 = document.querySelector('.js-serve-1');
+    serveTeam2 = document.querySelector('.js-serve-2');
+
+    pointsWinner1 = document.querySelector('.js-points--winner-1')
+    pointsWinner2 = document.querySelector('.js-points--winner-2')
+
+    winnerTeam = document.querySelector('.js-winner-team');
+    winnerTeamBg = document.querySelector('.js-winner-bg');
 
     // console.log(window.location.hostname)
     listenToSocket()

@@ -35,6 +35,23 @@ GamesTeam2Set3 = 0
 
 Set = 0
 
+# Previous points
+prevPoints1 = 0
+prevPoints2 = 0
+
+prevGames1 = 0
+prevGames2 = 0
+
+prevGames1Set1 = 0
+prevGames1Set2 = 0
+prevGames1Set3 = 0
+
+prevGames2Set1 = 0
+prevGames2Set2 = 0
+prevGames2Set3 = 0
+
+prevSets = 0
+
 stateServiceTeam1 = False
 stateServiceTeam2 = False
 stateServiceSide = True # True is rood, false is blauw
@@ -79,9 +96,9 @@ def esp_connection_start():
     #     print("couldn't find the SampleServer service =(")
     #     sys.exit(0)
 
-    for s in range(len(service_matches)):
-        print("\nservice_matches: [" + str(s) + "]:")
-        print(service_matches[s])
+    # for s in range(len(service_matches)):
+    #     print("\nservice_matches: [" + str(s) + "]:")
+    #     print(service_matches[s])
         
     first_match = service_matches[0]
     port = first_match["port"]
@@ -100,7 +117,7 @@ def esp_connection_start():
 #endregion
 
 def points_team1_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, prevPoints1, prevPoints2, prevGames1, prevGames2, prevSets, prevGames1Set1, prevGames1Set2, prevGames1Set3, prevGames2Set1, prevGames2Set2, prevGames2Set3
 
     # Punten verhogen voor 1 game als het aantal games lager is dan 5
     if GamesTeam1 < 5:
@@ -187,12 +204,12 @@ def points_team1_up():
                 elif Set == 1:
                     GamesTeam1Set2 += 1
                 elif Set == 2:
-                    GamesTeam1Set3 += 1     
+                    GamesTeam1Set3 += 1  
                 Set += 1
             elif (PointsTeam1 >= 6 and PointsTeam2 > 5) :
                 if ((PointsTeam1 - PointsTeam2) < 1):
                     PointsTeam1 += 1
-                else:
+                else:  
                     GamesTeam1 = 0
                     GamesTeam2 = 0
                     PointsTeam1 = 0
@@ -202,7 +219,7 @@ def points_team1_up():
                     elif Set == 1:
                         GamesTeam1Set2 += 1
                     elif Set == 2:
-                        GamesTeam1Set3 += 1     
+                        GamesTeam1Set3 += 1  
                     Set += 1 
             else:
                 PointsTeam1 += 1
@@ -210,12 +227,12 @@ def points_team1_up():
             if ((GamesTeam1 - GamesTeam2) < 1): # Geen verschil van 2, dus doorspelen
                 if PointsTeam1 == 0:
                     PointsTeam1 = 15
-                elif PointsTeam1 == 15:
+                elif PointsTeam1 == 15: 
                     PointsTeam1 = 30
-                elif PointsTeam1 == 30:
+                elif PointsTeam1 == 30:   
                     PointsTeam1 = 40
                 elif PointsTeam1 == 40:
-                    if PointsTeam2 != 40:
+                    if PointsTeam2 != 40:       
                         GamesTeam1 += 1
                         PointsTeam1 = 0
                         PointsTeam2 = 0
@@ -226,10 +243,10 @@ def points_team1_up():
                         elif Set == 2:
                             GamesTeam1Set3 += 1
                         stateServiceSide = not stateServiceSide
-                    else:
+                    else:     
                         PointsTeam1 = "AD"
                         PointsTeam2 = "-"
-                elif PointsTeam1 == "AD":
+                elif PointsTeam1 == "AD":  
                     GamesTeam1 += 1
                     PointsTeam1 = 0
                     PointsTeam2 = 0
@@ -238,17 +255,17 @@ def points_team1_up():
                     elif Set == 1:
                         GamesTeam1Set2 += 1
                     elif Set == 2:
-                        GamesTeam1Set3 += 1  
-                    stateServiceSide = not stateServiceSide  
+                        GamesTeam1Set3 += 1
+                    stateServiceSide = not stateServiceSide 
             else: # Wel een verschil van 2 dus set verhogen
-                if PointsTeam1 == 0:
+                if PointsTeam1 == 0:   
                     PointsTeam1 = 15
-                elif PointsTeam1 == 15:
+                elif PointsTeam1 == 15:  
                     PointsTeam1 = 30
-                elif PointsTeam1 == 30:
+                elif PointsTeam1 == 30: 
                     PointsTeam1 = 40
                 elif PointsTeam1 == 40:
-                    if PointsTeam2 != 40:
+                    if PointsTeam2 != 40:      
                         GamesTeam1 = 0
                         GamesTeam2 = 0
                         PointsTeam1 = 0
@@ -261,7 +278,7 @@ def points_team1_up():
                             GamesTeam1Set3 += 1
                         stateServiceSide = not stateServiceSide
                         Set += 1
-                    else:
+                    else:      
                         PointsTeam1 = "AD"
                         PointsTeam2 = "-"
                 elif PointsTeam1 == "AD":
@@ -286,7 +303,7 @@ def points_team1_up():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
 
 def points_team2_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, prevPoints1, prevPoints2, prevGames1, prevGames2, prevSets, prevGames1Set1, prevGames1Set2, prevGames1Set3, prevGames2Set1, prevGames2Set2, prevGames2Set3
     
     if GamesTeam2 < 5:
         if PointsTeam2 == 0:
@@ -514,6 +531,28 @@ def points_team2_down():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
+def points_down():
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, prevPoints1, prevPoints2, prevGames1, prevGames2, prevSets, prevGames1Set1, prevGames1Set2, prevGames1Set3, prevGames2Set1, prevGames2Set2, prevGames2Set3
+
+    PointsTeam1 = prevPoints1
+    GamesTeam1 = prevGames1
+
+    if PointsTeam1 == 0:
+        if Set == 0:
+            GamesTeam1Set1 = GamesTeam1
+        elif Set == 1:
+            GamesTeam1Set2 = GamesTeam1
+        elif Set == 2:
+            GamesTeam1Set3 = GamesTeam1
+
+
+    socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
+    socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
+    # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
+    # print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
+    # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
+    print(f"") 
+
 def score():
     esp_connection_start()
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide
@@ -564,11 +603,13 @@ def score():
 
         # elif GPIO.input(knop1down) == 0:
         elif message == b'teamRoodDown':
-            points_team1_down()
+            # points_team1_down()
+            points_down()
 
         # elif GPIO.input(knop2down) == 0:
         elif message == b'teamBlauwDown':
-            points_team2_down()
+            # points_team2_down()
+            points_down()
 
         time.sleep(0.1)
 
