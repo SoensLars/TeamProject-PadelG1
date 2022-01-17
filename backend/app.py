@@ -174,16 +174,62 @@ def points_team1_up():
                 GamesTeam1Set3 += 1
             stateServiceSide = not stateServiceSide
             Set += 1    
-    elif GamesTeam1 >= 5 and GamesTeam2 > 4:
-        if ((GamesTeam1 - GamesTeam2) < 1): # Geen verschil van 2, dus doorspelen
-            if PointsTeam1 == 0:
-                PointsTeam1 = 15
-            elif PointsTeam1 == 15:
-                PointsTeam1 = 30
-            elif PointsTeam1 == 30:
-                PointsTeam1 = 40
-            elif PointsTeam1 == 40:
-                if PointsTeam2 != 40:
+    elif (GamesTeam1 >= 5 and GamesTeam2 > 4):
+        # Tiebreak spelen of niet
+        if (GamesTeam1 == 6 and GamesTeam2 == 6):
+            if (PointsTeam1 == 6 and PointsTeam2 <= 5):
+                GamesTeam1 = 0
+                GamesTeam2 = 0
+                PointsTeam1 = 0
+                PointsTeam2 = 0
+                if Set == 0:
+                    GamesTeam1Set1 += 1
+                elif Set == 1:
+                    GamesTeam1Set2 += 1
+                elif Set == 2:
+                    GamesTeam1Set3 += 1     
+                Set += 1
+            elif (PointsTeam1 >= 6 and PointsTeam2 > 5) :
+                if ((PointsTeam1 - PointsTeam2) < 1):
+                    PointsTeam1 += 1
+                else:
+                    GamesTeam1 = 0
+                    GamesTeam2 = 0
+                    PointsTeam1 = 0
+                    PointsTeam2 = 0
+                    if Set == 0:
+                        GamesTeam1Set1 += 1
+                    elif Set == 1:
+                        GamesTeam1Set2 += 1
+                    elif Set == 2:
+                        GamesTeam1Set3 += 1     
+                    Set += 1 
+            else:
+                PointsTeam1 += 1
+        else:
+            if ((GamesTeam1 - GamesTeam2) < 1): # Geen verschil van 2, dus doorspelen
+                if PointsTeam1 == 0:
+                    PointsTeam1 = 15
+                elif PointsTeam1 == 15:
+                    PointsTeam1 = 30
+                elif PointsTeam1 == 30:
+                    PointsTeam1 = 40
+                elif PointsTeam1 == 40:
+                    if PointsTeam2 != 40:
+                        GamesTeam1 += 1
+                        PointsTeam1 = 0
+                        PointsTeam2 = 0
+                        if Set == 0:
+                            GamesTeam1Set1 += 1
+                        elif Set == 1:
+                            GamesTeam1Set2 += 1
+                        elif Set == 2:
+                            GamesTeam1Set3 += 1
+                        stateServiceSide = not stateServiceSide
+                    else:
+                        PointsTeam1 = "AD"
+                        PointsTeam2 = "-"
+                elif PointsTeam1 == "AD":
                     GamesTeam1 += 1
                     PointsTeam1 = 0
                     PointsTeam2 = 0
@@ -192,31 +238,33 @@ def points_team1_up():
                     elif Set == 1:
                         GamesTeam1Set2 += 1
                     elif Set == 2:
-                        GamesTeam1Set3 += 1
-                    stateServiceSide = not stateServiceSide
-                else:
-                    PointsTeam1 = "AD"
-                    PointsTeam2 = "-"
-            elif PointsTeam1 == "AD":
-                GamesTeam1 += 1
-                PointsTeam1 = 0
-                PointsTeam2 = 0
-                if Set == 0:
-                    GamesTeam1Set1 += 1
-                elif Set == 1:
-                    GamesTeam1Set2 += 1
-                elif Set == 2:
-                    GamesTeam1Set3 += 1  
-                stateServiceSide = not stateServiceSide  
-        else: # Wel een verschil van 2 dus set verhogen
-            if PointsTeam1 == 0:
-                PointsTeam1 = 15
-            elif PointsTeam1 == 15:
-                PointsTeam1 = 30
-            elif PointsTeam1 == 30:
-                PointsTeam1 = 40
-            elif PointsTeam1 == 40:
-                if PointsTeam2 != 40:
+                        GamesTeam1Set3 += 1  
+                    stateServiceSide = not stateServiceSide  
+            else: # Wel een verschil van 2 dus set verhogen
+                if PointsTeam1 == 0:
+                    PointsTeam1 = 15
+                elif PointsTeam1 == 15:
+                    PointsTeam1 = 30
+                elif PointsTeam1 == 30:
+                    PointsTeam1 = 40
+                elif PointsTeam1 == 40:
+                    if PointsTeam2 != 40:
+                        GamesTeam1 = 0
+                        GamesTeam2 = 0
+                        PointsTeam1 = 0
+                        PointsTeam2 = 0
+                        if Set == 0:
+                            GamesTeam1Set1 += 1
+                        elif Set == 1:
+                            GamesTeam1Set2 += 1
+                        elif Set == 2:
+                            GamesTeam1Set3 += 1
+                        stateServiceSide = not stateServiceSide
+                        Set += 1
+                    else:
+                        PointsTeam1 = "AD"
+                        PointsTeam2 = "-"
+                elif PointsTeam1 == "AD":
                     GamesTeam1 = 0
                     GamesTeam2 = 0
                     PointsTeam1 = 0
@@ -228,23 +276,7 @@ def points_team1_up():
                     elif Set == 2:
                         GamesTeam1Set3 += 1
                     stateServiceSide = not stateServiceSide
-                    Set += 1
-                else:
-                    PointsTeam1 = "AD"
-                    PointsTeam2 = "-"
-            elif PointsTeam1 == "AD":
-                GamesTeam1 = 0
-                GamesTeam2 = 0
-                PointsTeam1 = 0
-                PointsTeam2 = 0
-                if Set == 0:
-                    GamesTeam1Set1 += 1
-                elif Set == 1:
-                    GamesTeam1Set2 += 1
-                elif Set == 2:
-                    GamesTeam1Set3 += 1
-                stateServiceSide = not stateServiceSide
-                Set += 1 
+                    Set += 1 
         
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3,'points': PointsTeam1, 'stateService': stateServiceSide})    
@@ -328,15 +360,61 @@ def points_team2_up():
             stateServiceSide = not stateServiceSide
             Set += 1    
     elif GamesTeam2 >= 5 and GamesTeam1 > 4:
-        if ((GamesTeam2 - GamesTeam1) < 1): # Geen verschil van 2, dus doorspelen
-            if PointsTeam2 == 0:
-                PointsTeam2 = 15
-            elif PointsTeam2 == 15:
-                PointsTeam2 = 30
-            elif PointsTeam2 == 30:
-                PointsTeam2 = 40
-            elif PointsTeam2 == 40:
-                if PointsTeam1 != 40:
+        # Tiebreak spelen
+        if (GamesTeam2 == 6 and GamesTeam1 == 6):
+            if (PointsTeam2 == 6 and PointsTeam1 <= 5):
+                GamesTeam1 = 0
+                GamesTeam2 = 0
+                PointsTeam1 = 0
+                PointsTeam2 = 0
+                if Set == 0:
+                    GamesTeam2Set1 += 1
+                elif Set == 1:
+                    GamesTeam2Set2 += 1
+                elif Set == 2:
+                    GamesTeam2Set3 += 1     
+                Set += 1
+            elif (PointsTeam2 >= 6 and PointsTeam1 > 5) :
+                if ((PointsTeam2 - PointsTeam1) < 1):
+                    PointsTeam2 += 1
+                else:
+                    GamesTeam1 = 0
+                    GamesTeam2 = 0
+                    PointsTeam1 = 0
+                    PointsTeam2 = 0
+                    if Set == 0:
+                        GamesTeam2Set1 += 1
+                    elif Set == 1:
+                        GamesTeam2Set2 += 1
+                    elif Set == 2:
+                        GamesTeam2Set3 += 1     
+                    Set += 1
+            else:
+                PointsTeam2 += 1
+        else:
+            if ((GamesTeam2 - GamesTeam1) < 1): # Geen verschil van 2, dus doorspelen
+                if PointsTeam2 == 0:
+                    PointsTeam2 = 15
+                elif PointsTeam2 == 15:
+                    PointsTeam2 = 30
+                elif PointsTeam2 == 30:
+                    PointsTeam2 = 40
+                elif PointsTeam2 == 40:
+                    if PointsTeam1 != 40:
+                        GamesTeam2 += 1
+                        PointsTeam1 = 0
+                        PointsTeam2 = 0
+                        if Set == 0:
+                            GamesTeam2Set1 += 1
+                        elif Set == 1:
+                            GamesTeam2Set2 += 1
+                        elif Set == 2:
+                            GamesTeam2Set3 += 1
+                        stateServiceSide = not stateServiceSide
+                    else:
+                        PointsTeam2 = "AD"
+                        PointsTeam1 = "-"
+                elif PointsTeam2 == "AD":
                     GamesTeam2 += 1
                     PointsTeam1 = 0
                     PointsTeam2 = 0
@@ -345,31 +423,33 @@ def points_team2_up():
                     elif Set == 1:
                         GamesTeam2Set2 += 1
                     elif Set == 2:
-                        GamesTeam2Set3 += 1
-                    stateServiceSide = not stateServiceSide
-                else:
-                    PointsTeam2 = "AD"
-                    PointsTeam1 = "-"
-            elif PointsTeam2 == "AD":
-                GamesTeam2 += 1
-                PointsTeam1 = 0
-                PointsTeam2 = 0
-                if Set == 0:
-                    GamesTeam2Set1 += 1
-                elif Set == 1:
-                    GamesTeam2Set2 += 1
-                elif Set == 2:
-                    GamesTeam2Set3 += 1   
-                stateServiceSide = not stateServiceSide 
-        else: # Wel een verschil van 2 dus set verhogen
-            if PointsTeam2 == 0:
-                PointsTeam2 = 15
-            elif PointsTeam2 == 15:
-                PointsTeam2 = 30
-            elif PointsTeam2 == 30:
-                PointsTeam2 = 40
-            elif PointsTeam2 == 40:
-                if PointsTeam1 != 40:
+                        GamesTeam2Set3 += 1   
+                    stateServiceSide = not stateServiceSide 
+            else: # Wel een verschil van 2 dus set verhogen
+                if PointsTeam2 == 0:
+                    PointsTeam2 = 15
+                elif PointsTeam2 == 15:
+                    PointsTeam2 = 30
+                elif PointsTeam2 == 30:
+                    PointsTeam2 = 40
+                elif PointsTeam2 == 40:
+                    if PointsTeam1 != 40:
+                        GamesTeam1 = 0
+                        GamesTeam2 = 0
+                        PointsTeam1 = 0
+                        PointsTeam2 = 0
+                        if Set == 0:
+                            GamesTeam2Set1 += 1
+                        elif Set == 1:
+                            GamesTeam2Set2 += 1
+                        elif Set == 2:
+                            GamesTeam2Set3 += 1
+                        stateServiceSide = not stateServiceSide
+                        Set += 1
+                    else:
+                        PointsTeam2 = "AD"
+                        PointsTeam1 = "-"
+                elif PointsTeam2 == "AD":
                     GamesTeam1 = 0
                     GamesTeam2 = 0
                     PointsTeam1 = 0
@@ -381,23 +461,7 @@ def points_team2_up():
                     elif Set == 2:
                         GamesTeam2Set3 += 1
                     stateServiceSide = not stateServiceSide
-                    Set += 1
-                else:
-                    PointsTeam2 = "AD"
-                    PointsTeam1 = "-"
-            elif PointsTeam2 == "AD":
-                GamesTeam1 = 0
-                GamesTeam2 = 0
-                PointsTeam1 = 0
-                PointsTeam2 = 0
-                if Set == 0:
-                    GamesTeam2Set1 += 1
-                elif Set == 1:
-                    GamesTeam2Set2 += 1
-                elif Set == 2:
-                    GamesTeam2Set3 += 1
-                stateServiceSide = not stateServiceSide
-                Set += 1 
+                    Set += 1 
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3, 'points': PointsTeam1, 'stateService': stateServiceSide})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
