@@ -1,7 +1,18 @@
+:root {
+    --global-color-white: #ffffff;
+    --global-color-grey: #f3f3f3;
+    --global-color-blue: #1b0550;
+    --global-color-green: #00938d;
+    --global-color-yellow: #fedf2d;
+
+    --global-color-team-red: #fe2d2d;
+    --global-color-team-blue: #2d3cfe;
+}
+
 html {
     font-size: 100%;
     font-family: Arial, Helvetica, sans-serif;
-    color: white;
+    color: var(--global-color-white);
 }
 
 body {
@@ -10,7 +21,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #1b0550;
+    background-color: var(--global-color-blue);
     margin: 0;
 }
 
@@ -23,6 +34,15 @@ img {
     height: 50px;
 }
 
+li {
+    list-style-type: none;
+}
+
+ul {
+    padding: 0px;
+    margin: 0px;
+}
+
 /*
     ### Objects
 */
@@ -32,21 +52,50 @@ img {
 }
 
 .o-serve-page {
-    /* display: block; */
-    display: none;
+    display: block;
 }
 
 .o-winner-page {
-    /* display: none; */
+    display: none;
+}
+
+.o-set1-1 {
+    display: block;
+    color: var(--global-color-white);
+}
+
+.o-set1-2 {
+    display: block;
+    color: var(--global-color-white);
+}
+
+.o-set2-1 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+.o-set2-2 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+.o-set3-2 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+.o-set3-1 {
+    display: none;
+    color: var(--global-color-white);
 }
 
 /*
-    ### Elements
+    ### Components
 */
 
 .c-scoreboard {
     align-items: center;
-    border: 10px solid white;
+    border: 10px solid var(--global-color-white);
     width: 900px;
     height: 300px;
 }
@@ -60,28 +109,27 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #00938d;
+    background-color: var(--global-color-green);
     padding: 0 3rem;
     width: 674px;
-    /* border: 5px solid white; */
 }
 
 .c-color-team {
-    border-right: 10px solid white;
+    border-right: 10px solid var(--global-color-white);
 }
 
 .c-color-team-1 {
     width: 140px;
     height: 145px;
-    border-bottom: 5px solid white;
-    background-color: red;
+    border-bottom: 5px solid var(--global-color-white);
+    background-color: var(--global-color-team-red);
 }
 
 .c-color-team-2 {
     width: 140px;
     height: 145px;
     border-top: 5px solid white;
-    background-color: blue;
+    background-color: var(--global-color-team-blue);
 }
 
 .c-points {
@@ -91,17 +139,17 @@ img {
     list-style-type: none;
 }
 
-.c-points li{
-    font-size: 9rem;
-    font-weight: bold;
+.c-points li {
+    font-size: 3rem;
+    font-weight: 600;
 }
 
 .c-points-bg {
     display: flex;
     width: 5rem;
     height: 5rem;
-    background-color: #fedf2d;
-    color: #1b0550;
+    background-color: var(--global-color-yellow);
+    color: var(--global-color-blue);
     align-items: center;
     justify-content: center;
 }
@@ -118,52 +166,22 @@ img {
     padding: 1rem;
     align-items: center;
     text-align: center;
-    color: #1b0550;
-    background-color: rgb(255, 255, 255);
-}
-
-.o-set1-1 {
-    display: block;
-    color: white;
-}
-
-.o-set1-2 {
-    display: block;
-    color: white;
-}
-
-.o-set2-1 {
-    display: none;
-    color: white;
-}
-
-.o-set2-2 {
-    display: none;
-    color: white;
-}
-
-.o-set3-2 {
-    display: none;
-    color: white;
-}
-
-.o-set3-1 {
-    display: none;
-    color: white;
+    color: var(--global-color-blue);
+    background-color: var(--global-color-white);
 }
 
 .c-serve-1 {
-    height: 30px;
-    width: 30px;
-    background-color: #fedf2d;
+    height: 2rem;
+    width: 2rem;
+    background-color: var(--global-color-yellow);
     border-radius: 100%;
     visibility: hidden;
 }
 
 .c-serve-2 {
-    height: 30px;
-    width: 30px;
-    background-color: #fedf2d;
+    height: 2rem;
+    width: 2rem;
+    background-color: var(--global-color-yellow);
     border-radius: 100%;
     visibility: hidden;
 }
@@ -175,8 +193,8 @@ img {
 }
 
 .c-loader {
-    border: 3rem solid #f3f3f3; /* Light grey */
-    border-top: 3rem solid #00938d;
+    border: 3rem solid var(--global-color-grey); /* Light grey */
+    border-top: 3rem solid var(--global-color-green);
     border-radius: 50%;
     width: 20rem;
     height: 20rem;
@@ -204,11 +222,11 @@ img {
     margin-bottom: 4rem;
 }
 .c-span--on {
-    color: #fedf2d;
+    color: var(--global-color-yellow);
 }
 
 .c-span--serve {
-    color: #fedf2d;
+    color: var(--global-color-yellow);
     font-size: 5rem;
     font-weight: bold;
 }
@@ -220,7 +238,7 @@ img {
     gap: 4rem;
 }
 
-.c-serve h1{
+.c-serve h1 {
     font-size: 5rem;
     width: 59rem;
 }
@@ -247,9 +265,9 @@ img {
     align-items: center;
     width: 75rem;
     height: 13rem;
-    background-color: #2d3cfe;
+    background-color: var(--global-color-team-blue);
     border-radius: 3rem;
-    border: 0.5rem solid white;
+    border: 0.5rem solid var(--global-color-white);
     margin-bottom: 4rem;
 }
 
@@ -267,21 +285,44 @@ img {
 .c-logo--bg {
     width: 22rem;
     height: 22rem;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: var(--global-color-white);
     border-radius: 3rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.c-logo{
+.c-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 3rem;
     width: 17rem;
     height: 17rem;
+    background-color: var(--global-color-white);
+}
+
+.c-logo img {
+    height: 15rem;
 }
 
 .c-points--winner {
     display: flex;
     flex-direction: column;
     margin: 0 3rem;
+}
+
+.c-timer {
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: end;
+}
+
+/*
+    ### Utility Classes
+*/
+
+.u-yellow {
+    color: var(--global-color-yellow);
 }

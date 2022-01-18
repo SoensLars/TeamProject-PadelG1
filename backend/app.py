@@ -1,3 +1,4 @@
+from concurrent.futures import thread
 from RPi import GPIO
 from subprocess import check_output, call 
 import time
@@ -7,6 +8,7 @@ from flask_cors import CORS
 import threading
 import serial
 from bluetooth import *
+import subprocess as sp
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'geheim!'
@@ -56,12 +58,18 @@ stateServiceTeam1 = False
 stateServiceTeam2 = False
 stateServiceSide = True # True is rood, false is blauw
 
+connectionEsp = False
+stateConnection = 0
+
 messageEsp = ""
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 #region -- Code ESP Connection   
+# addr = "08:3A:F2:AC:2A:DE" # Thomas
+addr = "24:62:AB:FD:24:9E" # Lars
+
 sock=BluetoothSocket(RFCOMM)
 buf_size = 1024;
 
@@ -78,11 +86,10 @@ def rx_and_echo():
     while True:
         messageEsp = sock.recv(buf_size)
         return messageEsp
-            
+
 def esp_connection_start():
+    global addr
     #MAC address of ESP32
-    # addr = "08:3A:F2:AC:2A:DE" # Thomas
-    addr = "24:62:AB:FD:24:9E" # Lars
     #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
     #service_matches = find_service( uuid = uuid, address = addr )
     service_matches = find_service( address = addr )
@@ -92,9 +99,9 @@ def esp_connection_start():
         print("couldn't find the SampleServer service =(")
         socketio.emit('B2F_esp_no_connection')    
 
-    # if len(service_matches) == 0:
-    #     print("couldn't find the SampleServer service =(")
-    #     sys.exit(0)
+    if len(service_matches) == 0:
+        print("couldn't find the SampleServer service =(")
+        sys.exit(0)
 
     # for s in range(len(service_matches)):
     #     print("\nservice_matches: [" + str(s) + "]:")
@@ -102,7 +109,7 @@ def esp_connection_start():
         
     first_match = service_matches[0]
     port = first_match["port"]
-    name = first_match["name"]
+    # name = first_match["name"]
     host = first_match["host"]
 
     port=1
@@ -553,11 +560,49 @@ def points_down():
     # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
-def score():
-    esp_connection_start()
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide
+def esp_connection():
+    global addr, connectionEsp, stateConnection
     while True:
+        #MAC address of ESP32
+        #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
+        #service_matches = find_service( uuid = uuid, address = addr )
+        service_matches = find_service( address = addr )
 
+        if len(service_matches) == 0:
+            service_matches = find_service( address = addr )
+            connectionEsp = False
+        else:
+            connectionEsp = True
+
+        if connectionEsp == False:
+            print("Couldn't connect the device")
+            socketio.emit('B2F_esp_no_connection') 
+            stateConnection = 0
+        else:
+            if stateConnection == 0:
+                sock=BluetoothSocket(RFCOMM)
+                print("Connected to device")
+                first_match = service_matches[0]
+                # print(first_match)
+                port = first_match["port"]
+                name = first_match["name"]
+                host = first_match["host"]
+
+                # port=1
+
+                sock.connect((host, port))
+
+                sock.send("\nconnected\n")
+                socketio.emit('B2F_esp_connection') 
+                stateConnection = 1
+            else:
+                print("Already connected")
+        time.sleep(1)
+
+def score():
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide
+    esp_connection_start()
+    while True:
         message = rx_and_echo()
         # print((message))
 
@@ -613,9 +658,12 @@ def score():
 
         time.sleep(0.1)
 
-
 thread1 = threading.Timer(0.1, score)
+thread2 = threading.Timer(1, esp_connection)
+# thread2.start()
 thread1.start()
+
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=False, host='0.0.0.0')
