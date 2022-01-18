@@ -167,11 +167,11 @@ img {
 }
 
 .c-loader {
-    border: 1rem solid #f3f3f3; /* Light grey */
-    border-top: 1rem solid #00938d;
+    border: 3rem solid #f3f3f3; /* Light grey */
+    border-top: 3rem solid #00938d;
     border-radius: 50%;
-    width: 8rem;
-    height: 8rem;
+    width: 26rem;
+    height: 26rem;
     animation: spin 2s linear infinite;
     margin: auto;
 }
@@ -191,6 +191,9 @@ img {
     gap: 2rem;
 }
 
+.c-loading h1{
+    font-size: 6rem;
+}
 .c-span--on {
     color: #fedf2d;
 }
