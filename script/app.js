@@ -78,16 +78,16 @@ function listenToSocket () {
                 if (games1Set2 > games2Set2) {
                     gamesSet2Team1.style.color  = "#FEDF2D"
                     winnerTeam.innerHTML = "Red";
-                    winnerTeamBg.style.backgroundColor = "red";
-                    pointsWinner1.innerHTML = `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
-                    pointsWinner2.innerHTML = `<h1>${games2Set1}</h1><h1>${games2Set2}</h1>`
+                    winnerTeamBg.style.backgroundColor = "red"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li></ul>`
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li></ul>`
                 }
                 else {
                     gamesSet2Team2.style.color  = "#FEDF2D"
                     winnerTeam.innerHTML = "Blue";
                     winnerTeamBg.style.backgroundColor = "blue";
-                    pointsWinner1.innerHTML = `<h1>${games1Set1}</h1><h1>${games1Set2}</h1>`
-                    pointsWinner2.innerHTML = `<h1>${games2Set1}</h1><h1>${games2Set2+1}</h1>`
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li></ul>`
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li></ul>`
                 }
             }
             // Match is nog niet beindigd

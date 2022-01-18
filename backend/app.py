@@ -117,7 +117,7 @@ def esp_connection_start():
 #endregion
 
 def points_team1_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, prevPoints1, prevPoints2, prevGames1, prevGames2, prevSets, prevGames1Set1, prevGames1Set2, prevGames1Set3, prevGames2Set1, prevGames2Set2, prevGames2Set3
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
 
     # Punten verhogen voor 1 game als het aantal games lager is dan 5
     if GamesTeam1 < 5:
@@ -303,7 +303,7 @@ def points_team1_up():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
 
 def points_team2_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, prevPoints1, prevPoints2, prevGames1, prevGames2, prevSets, prevGames1Set1, prevGames1Set2, prevGames1Set3, prevGames2Set1, prevGames2Set2, prevGames2Set3
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
     
     if GamesTeam2 < 5:
         if PointsTeam2 == 0:
@@ -532,7 +532,7 @@ def points_team2_down():
     print(f"") 
 
 def points_down():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, prevPoints1, prevPoints2, prevGames1, prevGames2, prevSets, prevGames1Set1, prevGames1Set2, prevGames1Set3, prevGames2Set1, prevGames2Set2, prevGames2Set3
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
 
     PointsTeam1 = prevPoints1
     GamesTeam1 = prevGames1

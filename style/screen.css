@@ -19,7 +19,16 @@ h1 {
 }
 
 img {
-    height: 50px;
+    height: 3rem;
+}
+
+li {
+    list-style-type: none;
+}
+
+ul {
+    padding: 0px;
+    margin: 0px;
 }
 
 /*
@@ -45,13 +54,13 @@ img {
 .c-scoreboard {
     align-items: center;
     border: 10px solid white;
-    width: 900px;
-    height: 300px;
+    width: 56.25rem;
+    height: 18.75rem;
 }
 
 .c-color-score {
     display: flex;
-    width: 900px;
+    width: 56.25rem;
 }
 
 .c-team {
@@ -60,7 +69,7 @@ img {
     justify-content: space-between;
     background-color: #00938d;
     padding: 0 3rem;
-    width: 674px;
+    width: 42.125rem;
     /* border: 5px solid white; */
 }
 
@@ -69,14 +78,14 @@ img {
 }
 
 .c-color-team-1 {
-    width: 140px;
+    width: 145px;
     height: 145px;
     border-bottom: 5px solid white;
     background-color: red;
 }
 
 .c-color-team-2 {
-    width: 140px;
+    width: 145px;
     height: 145px;
     border-top: 5px solid white;
     background-color: blue;
@@ -86,6 +95,11 @@ img {
     display: flex;
     align-items: center;
     gap: 4rem;
+}
+
+.c-points li {
+    font-size: 3rem;
+    font-weight: 600;
 }
 
 .c-points-bg {
@@ -102,7 +116,7 @@ img {
     padding-top: 2rem;
     display: flex;
     justify-content: space-between;
-    width: 920px;
+    width: 57.5rem;
 }
 
 .c-sponsor-board {
@@ -145,16 +159,16 @@ img {
 }
 
 .c-serve-1 {
-    height: 30px;
-    width: 30px;
+    height: 2rem;
+    width: 2rem;
     background-color: #fedf2d;
     border-radius: 100%;
     visibility: hidden;
 }
 
 .c-serve-2 {
-    height: 30px;
-    width: 30px;
+    height: 2rem;
+    width: 2rem;
     background-color: #fedf2d;
     border-radius: 100%;
     visibility: hidden;
@@ -200,15 +214,16 @@ img {
     font-size: 3rem;
     font-weight: bold;
 }
-.c-serve{
+
+.c-serve {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    gap: 10vh;
+    gap: 7vh;
 }
 
-.c-teambtn{
+.c-teambtn {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -223,33 +238,41 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 101rem;
-    height: 18.25rem;
-    background-color: #2d3cfe;
+    width: 56.5rem; /* 1 lager door border */
+    height: 9rem;
+    background-color: blue;
     border-radius: 3rem;
     border: 0.5rem solid white;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 }
 
 .c-winner--title h1 {
-    font-size: 7rem;
+    font-size: 4rem;
 }
 
 .c-overview {
     display: flex;
-    width: 102rem;
+    width: 57.5rem;
     align-items: center;
     justify-content: space-between;
 }
 
 .c-logo {
-    width: 30rem;
-    height: 30rem;
-    background-color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 17rem;
+    height: 17rem;
+    background-color: white;
     border-radius: 3rem;
+}
+
+.c-logo img {
+    height: 15rem;
 }
 
 .c-points--winner {
     display: flex;
     flex-direction: column;
+    gap: 2rem;
 }
