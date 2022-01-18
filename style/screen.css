@@ -170,8 +170,8 @@ img {
     border: 3rem solid #f3f3f3; /* Light grey */
     border-top: 3rem solid #00938d;
     border-radius: 50%;
-    width: 26rem;
-    height: 26rem;
+    width: 20rem;
+    height: 20rem;
     animation: spin 2s linear infinite;
     margin: auto;
 }
