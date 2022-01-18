@@ -202,7 +202,7 @@ img {
 
 .c-span--serve {
     color: #fedf2d;
-    font-size: 3rem;
+    font-size: 5rem;
     font-weight: bold;
 }
 .c-serve {
@@ -210,7 +210,12 @@ img {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    gap: 10vh;
+    gap: 4rem;
+}
+
+.c-serve h1{
+    font-size: 5rem;
+    width: 59rem;
 }
 
 .c-teambtn {
@@ -220,8 +225,13 @@ img {
 }
 
 .c-teambtn p {
-    font-size: 3rem;
+    font-size: 5rem;
     font-weight: bold;
+}
+
+.c-teambtn-svg{
+    width: 13rem;
+    height: 13rem;
 }
 
 .c-winner--title {
