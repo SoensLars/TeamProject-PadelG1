@@ -16,6 +16,7 @@ body {
 
 h1 {
     font-size: 3rem;
+    margin: 0;
 }
 
 img {
@@ -191,8 +192,9 @@ img {
     gap: 2rem;
 }
 
-.c-loading h1{
+.c-loading h1 {
     font-size: 6rem;
+    margin-bottom: 4rem;
 }
 .c-span--on {
     color: #fedf2d;
@@ -203,7 +205,7 @@ img {
     font-size: 3rem;
     font-weight: bold;
 }
-.c-serve{
+.c-serve {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -211,13 +213,13 @@ img {
     gap: 10vh;
 }
 
-.c-teambtn{
+.c-teambtn {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.c-teambtn p{
+.c-teambtn p {
     font-size: 3rem;
     font-weight: bold;
 }
