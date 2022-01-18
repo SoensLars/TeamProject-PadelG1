@@ -16,19 +16,11 @@ body {
 
 h1 {
     font-size: 3rem;
+    margin: 0;
 }
 
 img {
-    height: 3rem;
-}
-
-li {
-    list-style-type: none;
-}
-
-ul {
-    padding: 0px;
-    margin: 0px;
+    height: 50px;
 }
 
 /*
@@ -44,7 +36,7 @@ ul {
 }
 
 .o-winner-page {
-    display: none;
+    /* display: none; */
 }
 
 /*
@@ -54,13 +46,13 @@ ul {
 .c-scoreboard {
     align-items: center;
     border: 10px solid white;
-    width: 56.25rem;
-    height: 18.75rem;
+    width: 900px;
+    height: 300px;
 }
 
 .c-color-score {
     display: flex;
-    width: 56.25rem;
+    width: 900px;
 }
 
 .c-team {
@@ -69,7 +61,7 @@ ul {
     justify-content: space-between;
     background-color: #00938d;
     padding: 0 3rem;
-    width: 42.125rem;
+    width: 674px;
     /* border: 5px solid white; */
 }
 
@@ -78,14 +70,14 @@ ul {
 }
 
 .c-color-team-1 {
-    width: 145px;
+    width: 140px;
     height: 145px;
     border-bottom: 5px solid white;
     background-color: red;
 }
 
 .c-color-team-2 {
-    width: 145px;
+    width: 140px;
     height: 145px;
     border-top: 5px solid white;
     background-color: blue;
@@ -95,11 +87,7 @@ ul {
     display: flex;
     align-items: center;
     gap: 4rem;
-}
-
-.c-points li {
-    font-size: 3rem;
-    font-weight: 600;
+    list-style-type: none;
 }
 
 .c-points-bg {
@@ -116,7 +104,7 @@ ul {
     padding-top: 2rem;
     display: flex;
     justify-content: space-between;
-    width: 57.5rem;
+    width: 920px;
 }
 
 .c-sponsor-board {
@@ -159,16 +147,16 @@ ul {
 }
 
 .c-serve-1 {
-    height: 2rem;
-    width: 2rem;
+    height: 30px;
+    width: 30px;
     background-color: #fedf2d;
     border-radius: 100%;
     visibility: hidden;
 }
 
 .c-serve-2 {
-    height: 2rem;
-    width: 2rem;
+    height: 30px;
+    width: 30px;
     background-color: #fedf2d;
     border-radius: 100%;
     visibility: hidden;
@@ -181,11 +169,11 @@ ul {
 }
 
 .c-loader {
-    border: 1rem solid #f3f3f3; /* Light grey */
-    border-top: 1rem solid #00938d;
+    border: 3rem solid #f3f3f3; /* Light grey */
+    border-top: 3rem solid #00938d;
     border-radius: 50%;
-    width: 8rem;
-    height: 8rem;
+    width: 20rem;
+    height: 20rem;
     animation: spin 2s linear infinite;
     margin: auto;
 }
@@ -205,22 +193,30 @@ ul {
     gap: 2rem;
 }
 
+.c-loading h1 {
+    font-size: 6rem;
+    margin-bottom: 4rem;
+}
 .c-span--on {
     color: #fedf2d;
 }
 
 .c-span--serve {
     color: #fedf2d;
-    font-size: 3rem;
+    font-size: 5rem;
     font-weight: bold;
 }
-
 .c-serve {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    gap: 7vh;
+    gap: 4rem;
+}
+
+.c-serve h1{
+    font-size: 5rem;
+    width: 59rem;
 }
 
 .c-teambtn {
@@ -229,50 +225,48 @@ ul {
     align-items: center;
 }
 
-.c-teambtn p{
-    font-size: 3rem;
+.c-teambtn p {
+    font-size: 5rem;
     font-weight: bold;
+}
+
+.c-teambtn-svg{
+    width: 13rem;
+    height: 13rem;
 }
 
 .c-winner--title {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 56.5rem; /* 1 lager door border */
-    height: 9rem;
-    background-color: blue;
+    width: 75rem;
+    height: 13rem;
+    background-color: #2d3cfe;
     border-radius: 3rem;
     border: 0.5rem solid white;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
 }
 
 .c-winner--title h1 {
-    font-size: 4rem;
+    font-size: 5rem;
 }
 
 .c-overview {
     display: flex;
-    width: 57.5rem;
+    width: 75rem;
     align-items: center;
     justify-content: space-between;
 }
 
 .c-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 17rem;
-    height: 17rem;
-    background-color: white;
+    width: 22rem;
+    height: 22rem;
+    background-color: rgba(255, 255, 255, 0.5);
     border-radius: 3rem;
-}
-
-.c-logo img {
-    height: 15rem;
 }
 
 .c-points--winner {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    margin: 0 3rem;
 }
