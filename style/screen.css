@@ -119,7 +119,7 @@ ul {
 }
 
 .c-color-team {
-    border-right: 1rem solid var(--global-color-white);
+    border-right: 0.625rem solid var(--global-color-white);
     width: 13rem;
     height: 13.688rem;
 }
