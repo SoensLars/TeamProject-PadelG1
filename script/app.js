@@ -3,7 +3,7 @@
 const lanIP = `${window.location.hostname}:5000`;
 const socketio = io(`http://${lanIP}`);
 
-let scoreboardPage, servePage, winnerPage;
+let scoreboardPage, servePage, winnerPage, loaderPage;
 
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1;
 var pointsTeam2, currentGames2, gamesSet1Team2, gamesSet2Team2, gamesSet3Team2, setsTeam2;
@@ -22,6 +22,10 @@ let pointsWinner1, pointsWinner2;
 let hoursElement, minutesElement;
 var hours = 0, minutes = -1;
 
+// Form
+let button, macAddress;
+var macAddressValue;
+
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
         console.log('No esp connection');
@@ -29,7 +33,8 @@ function listenToSocket () {
     socketio.on('B2F_esp_connection', function () {
         console.log('Esp connected');
         if (stateConnection == 0) {
-            window.location.href = "pages/scoreboard.html";
+            loaderPage.style.display = "none";
+            servePage.style.display = "block";
             stateConnection = 1;
             console.log("Connected for the first time");
         }
@@ -93,7 +98,7 @@ function listenToSocket () {
                     gamesSet2Team1.style.color  = "#FEDF2D";
                     winnerTeam.innerHTML = "Red";
                     winnerTeamBg.style.backgroundColor = "#fe2d2d"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li></ul>`;
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li class="u-yellow">${games1Set2}</li></ul>`;
                     pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li></ul>`;
                 }
                 else {
@@ -101,7 +106,7 @@ function listenToSocket () {
                     winnerTeam.innerHTML = "Blue";
                     winnerTeamBg.style.backgroundColor = "#2d3cfe";
                     pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li></ul>`;
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li class="u-yellow">${games2Set1}</li><li class="u-yellow">${games2Set2+1}</li></ul>`;
                 }
             }
             // Match is nog niet beindigd
@@ -121,18 +126,30 @@ function listenToSocket () {
             scoreboardPage.style.display = "none";
             winnerPage.style.display = "block";
             if (games1Set3 > games2Set3) {
-                gamesSet3Team1.style.color  = "#FEDF2D";
+                gamesSet2Team1.style.color  = "#FEDF2D";
                 winnerTeam.innerHTML = "Red";
-                winnerteamBg.style.backgroundColor = "#fe2d2d";
-                pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li><li>${games1Set3+1}</li></ul>`;
-                pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li><li>${games2Set3}</li></ul>`;
+                winnerTeamBg.style.backgroundColor = "#fe2d2d"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
+                if (games1Set1 > games2Set1) {
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li>${games1Set2}</li><li class="u-yellow">${games1Set3}</li></ul>`;
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li class="u-yellow">${games2Set2}</li><li>${games2Set3}</li></ul>`;
+                }
+                else {
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li class="u-yellow">${games1Set2}</li><li class="u-yellow">${games1Set3}</li></ul>`;
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li class="u-yellow">${games2Set1}</li><li>${games2Set2}</li><li>${games2Set3}</li></ul>`;
+                }
             }
             else {
-                gamesSet3Team2.style.color  = "#FEDF2D";
+                gamesSet2Team2.style.color  = "#FEDF2D";
                 winnerTeam.innerHTML = "Blue";
                 winnerTeamBg.style.backgroundColor = "#2d3cfe";
-                pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li><li>${games1Set3}</li></ul>`;
-                pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li><li>${games2Set3+1}</li></ul>`;
+                if (games1Set1 > games2Set1) {
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li>${games1Set2}</li><li>${games1Set3}</li></ul>`;
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li class="u-yellow">${games2Set2}</li><li class="u-yellow">${games2Set3+1}</li></ul>`;
+                }
+                else {
+                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li class="u-yellow">${games1Set2}</li><li>${games1Set3}</li></ul>`;
+                    pointsWinner2.innerHTML = `<ul class="c-points"><li class="u-yellow">${games2Set1}</li><li>${games2Set2}</li><li class="u-yellow">${games2Set3+1}</li></ul>`;
+                }
             }
         }
 
@@ -213,6 +230,14 @@ function listenToSocket () {
     });
 }
 
+function listenToUI () {
+    button.addEventListener('click', function () {
+        macAddressValue = macAddress.value;
+        console.log(macAddressValue);
+        socketio.emit('F2B_mac', {'MAC': macAddressValue})
+    });
+}
+
 function timerFunction() {
     if (minutes != 59) {
         minutes += 1;
@@ -229,6 +254,7 @@ function init () {
     scoreboardPage = document.querySelector('.js-scoreboard-page');
     servePage = document.querySelector('.js-serve-page');
     winnerPage = document.querySelector('.js-winner-page');
+    loaderPage = document.querySelector('.js-loader-page');
 
     pointsTeam1 = document.querySelector('.js-points-1');
     currentGames1 = document.querySelector('.js-games-1');
@@ -254,8 +280,12 @@ function init () {
     hoursElement = document.querySelector('.js-hours');
     minutesElement = document.querySelector('.js-minutes');
 
+    button = document.querySelector('.js-button-form');
+    macAddress = document.querySelector('.js-mac');
+
     // console.log(window.location.hostname)
     listenToSocket();
+    listenToUI();
      
 }
 

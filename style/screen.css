@@ -52,11 +52,15 @@ ul {
 }
 
 .o-serve-page {
-    display: block;
+    display: none;
 }
 
 .o-winner-page {
     display: none;
+}
+
+.o-loader-page {
+    display: block;
 }
 
 .o-set1-1 {
@@ -273,8 +277,8 @@ ul {
 }
 
 .c-teambtn-svg {
-    width: 13rem;
-    height: 13rem;
+    width: 15rem;
+    height: 15rem;
 }
 
 .c-winner--title {
@@ -328,6 +332,11 @@ ul {
     display: flex;
     flex-direction: column;
     margin: 0 3rem;
+    gap: 3rem;
+}
+
+.c-points--winner .c-points {
+    gap: 7rem;
 }
 
 .c-form{
@@ -396,4 +405,3 @@ ul {
 .u-yellow {
     color: var(--global-color-yellow);
 }
-

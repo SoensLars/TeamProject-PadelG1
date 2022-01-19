@@ -1,4 +1,5 @@
 from concurrent.futures import thread
+from socket import socket
 from RPi import GPIO
 from subprocess import check_output, call 
 import time
@@ -9,11 +10,6 @@ import threading
 import serial
 from bluetooth import *
 import subprocess as sp
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'geheim!'
-socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False, ping_timeout=1)
-CORS(app)
 
 knop1up = 26
 knop1down = 19
@@ -65,6 +61,11 @@ messageEsp = ""
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'geheim!'
+socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False, ping_timeout=1)
+CORS(app)
 
 #region -- Code ESP Connection   
 # addr = "08:3A:F2:AC:2A:DE" # Thomas
@@ -123,6 +124,9 @@ def esp_connection_start():
     socketio.emit('B2F_esp_connection')
 #endregion
 
+# Socket
+
+# Functions
 def points_team1_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
 
@@ -597,7 +601,8 @@ def esp_connection():
                 stateConnection = 1
             else:
                 print("Already connected")
-        time.sleep(1)
+
+        time.sleep(10)
 
 def score():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide
@@ -648,21 +653,27 @@ def score():
 
         # elif GPIO.input(knop1down) == 0:
         elif message == b'teamRoodDown':
-            # points_team1_down()
-            points_down()
+            points_team1_down()
+            # points_down()
 
         # elif GPIO.input(knop2down) == 0:
         elif message == b'teamBlauwDown':
-            # points_team2_down()
-            points_down()
+            points_team2_down()
+            # points_down()
 
         time.sleep(0.1)
 
-thread1 = threading.Timer(0.1, score)
-thread2 = threading.Timer(1, esp_connection)
-# thread2.start()
-thread1.start()
 
+thread1 = threading.Timer(0.1, score)
+thread1.start()
+# thread2 = threading.Timer(1, esp_connection)
+# thread2.start()
+
+
+
+@socketio.on('F2B_mac')
+def mac_address(payload):
+    print(payload['MAC'])
 
 
 if __name__ == '__main__':
