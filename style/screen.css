@@ -48,11 +48,11 @@ ul {
 */
 
 .o-scoreboard-page {
-    display: block;
+    display: none;
 }
 
 .o-serve-page {
-    display: none;
+    display: block;
 }
 
 .o-winner-page {
