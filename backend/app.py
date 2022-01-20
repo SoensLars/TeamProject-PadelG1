@@ -10,12 +10,13 @@ import threading
 import serial
 from bluetooth import *
 import subprocess as sp
+import pygame
 
 knop1up = 26
 knop1down = 19
 
 knop2up = 21
-knop2down = 20
+knop2down = 2
 
 PointsTeam1 = 0
 PointsTeam2 = 0
@@ -74,6 +75,8 @@ addr = "24:62:AB:FD:24:9E" # Lars
 sock=BluetoothSocket(RFCOMM)
 buf_size = 1024;
 
+pygame.mixer.init()
+
 def input_and_send():
     print("\nType something\n")
     while True:
@@ -124,9 +127,12 @@ def esp_connection_start():
     socketio.emit('B2F_esp_connection')
 #endregion
 
-# Socket
+# Sound
+def play_sound_up():
+    pygame.mixer.music.load("Beep.mp3")
+    pygame.mixer.music.play()
 
-# Functions
+# Functions points
 def points_team1_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
 
@@ -630,6 +636,7 @@ def score():
                     print("Spel gedaan")
                 else:
                     points_team1_up()
+                    play_sound_up()
 
         # elif GPIO.input(knop2up) == 0:
         elif message == b'teamBlauwUp':
@@ -650,6 +657,7 @@ def score():
                     print("Spel gedaan")
                 else:
                     points_team2_up()
+                    play_sound_up()
 
         # elif GPIO.input(knop1down) == 0:
         elif message == b'teamRoodDown':
@@ -668,8 +676,6 @@ thread1 = threading.Timer(0.1, score)
 thread1.start()
 # thread2 = threading.Timer(1, esp_connection)
 # thread2.start()
-
-
 
 @socketio.on('F2B_mac')
 def mac_address(payload):
