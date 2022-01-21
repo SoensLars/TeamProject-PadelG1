@@ -12,18 +12,20 @@ from bluetooth import *
 import subprocess as sp
 import pygame
 
-knop1up = 26
-knop1down = 19
+# knop1up = 26
+# knop1down = 19
 
-knop2up = 21
-knop2down = 2
+# knop2up = 21
+# knop2down = 2
 
+# Punten en games in de huidige set
 PointsTeam1 = 0
 PointsTeam2 = 0
 
 GamesTeam1 = 0
 GamesTeam2 = 0
 
+# Aantal games van voorbije sets bijohouden
 GamesTeam1Set1 = 0
 GamesTeam1Set2 = 0
 GamesTeam1Set3 = 0
@@ -51,9 +53,11 @@ prevGames2Set3 = 0
 
 prevSets = 0
 
+# Controleren of het eerste punt voor het echte spel al is gespeeld
 stateServiceTeam1 = False
 stateServiceTeam2 = False
 stateServiceSide = True # True is rood, false is blauw
+serviceStart = "" # Welk kleur is er gestart met serveren?
 
 connectionEsp = False
 stateConnection = 0
@@ -61,21 +65,22 @@ stateConnection = 0
 messageEsp = ""
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
+# GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'geheim!'
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False, ping_timeout=1)
 CORS(app)
 
+pygame.mixer.init()
+
 #region -- Code ESP Connection   
 # addr = "08:3A:F2:AC:2A:DE" # Thomas
+# addr = "C4:4F:33:77:00:13" # Draadloos
 addr = "24:62:AB:FD:24:9E" # Lars
 
 sock=BluetoothSocket(RFCOMM)
 buf_size = 1024;
-
-pygame.mixer.init()
 
 def input_and_send():
     print("\nType something\n")
@@ -129,12 +134,12 @@ def esp_connection_start():
 
 # Sound
 def play_sound_up():
-    pygame.mixer.music.load("Beep.mp3")
+    pygame.mixer.music.load("/home/lars/Project/sounds/beep.mp3")
     pygame.mixer.music.play()
 
 # Functions points
 def points_team1_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart
 
     # Punten verhogen voor 1 game als het aantal games lager is dan 5
     if GamesTeam1 < 5:
@@ -211,6 +216,16 @@ def points_team1_up():
     elif (GamesTeam1 >= 5 and GamesTeam2 > 4):
         # Tiebreak spelen of niet
         if (GamesTeam1 == 6 and GamesTeam2 == 6):
+            if serviceStart == 'red':
+                stateServiceSide = True
+                serviceStart = ''
+            elif serviceStart == 'blue':
+                stateServiceSide = False
+                serviceStart = ''
+            if (PointsTeam1 + PointsTeam2) % 2 == 0:
+                pass
+            else:
+                stateServiceSide = not stateServiceSide
             if (PointsTeam1 == 6 and PointsTeam2 <= 5):
                 GamesTeam1 = 0
                 GamesTeam2 = 0
@@ -320,7 +335,7 @@ def points_team1_up():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
 
 def points_team2_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart
     
     if GamesTeam2 < 5:
         if PointsTeam2 == 0:
@@ -396,6 +411,16 @@ def points_team2_up():
     elif GamesTeam2 >= 5 and GamesTeam1 > 4:
         # Tiebreak spelen
         if (GamesTeam2 == 6 and GamesTeam1 == 6):
+            if serviceStart == 'red':
+                stateServiceSide = True
+                serviceStart = ''
+            elif serviceStart == 'blue':
+                stateServiceSide = False
+                serviceStart = ''
+            if (PointsTeam1 + PointsTeam2) % 2 == 0:
+                pass
+            else:
+                stateServiceSide = not stateServiceSide
             if (PointsTeam2 == 6 and PointsTeam1 <= 5):
                 GamesTeam1 = 0
                 GamesTeam2 = 0
@@ -570,6 +595,7 @@ def points_down():
     # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
+# Threads
 def esp_connection():
     global addr, connectionEsp, stateConnection
     while True:
@@ -611,7 +637,7 @@ def esp_connection():
         time.sleep(10)
 
 def score():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide, serviceStart
     esp_connection_start()
     while True:
         message = rx_and_echo()
@@ -624,6 +650,7 @@ def score():
                 stateServiceTeam1 = True
                 stateServiceTeam2 = True
                 stateServiceSide = True
+                serviceStart = "red"
                 socketio.emit('B2F_serve', stateServiceSide)
             else:
                 if Set == 2:
@@ -645,6 +672,7 @@ def score():
                 stateServiceTeam1 = True
                 stateServiceTeam2 = True
                 stateServiceSide = False
+                serviceStart = "blue"
                 socketio.emit('B2F_serve', stateServiceSide)
             else:
                 if Set == 2:

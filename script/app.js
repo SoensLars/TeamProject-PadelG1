@@ -5,22 +5,30 @@ const socketio = io(`http://${lanIP}`);
 
 let scoreboardPage, servePage, winnerPage, loaderPage;
 
+// Html elements
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1;
 var pointsTeam2, currentGames2, gamesSet1Team2, gamesSet2Team2, gamesSet3Team2, setsTeam2;
 
 var sets;
 var points1, currentGames1, games1Set1, games1Set2, games1Set3;
 var points2, currentGames2, games2Set1, games2Set2, games2Set3;
+
+// Welk team is aan de beurt om te serveren
 var stateService;
+
+// Is er connectie met de esp?
 var stateConnection = 0;
 
+// Html elements service
 let serveTeam1, serveTeam2;
+
+// Html elements winnerpage
 let winnerTeam, winnerTeamBg;
 let pointsWinner1, pointsWinner2;
 
-// Timer
+// Clock
 let hoursElement, minutesElement;
-var hours = 0, minutes = -1;
+var hours = 0, minutes = 0;
 
 // Form
 let button, macAddress;
@@ -29,6 +37,7 @@ var macAddressValue;
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
         console.log('No esp connection');
+
     })
     socketio.on('B2F_esp_connection', function () {
         console.log('Esp connected');
@@ -40,7 +49,8 @@ function listenToSocket () {
         }
         else {
             console.log("Loading screen");
-        }        
+        }     
+        setInterval(timerFunction, 1000);   
     })
     socketio.on('B2F_serve', function (payload) {
         servePage.style.display = "none";
@@ -57,7 +67,6 @@ function listenToSocket () {
             //padelbal in scoreboard aanpassen naar blauwe team
         }
         // Match begint hier, dus timer mag gestart worden
-        setInterval(timerFunction, 60000);
     })
     socketio.on('B2F_points_team1', function (payload) {
         // Punten in scoreboard weergeven
@@ -239,13 +248,9 @@ function listenToUI () {
 }
 
 function timerFunction() {
-    if (minutes != 59) {
-        minutes += 1;
-    }
-    else {
-        minutes = 0;
-        hours += 1;
-    }
+    const today = new Date();
+    hours = today.getHours();
+    minutes = today.getMinutes();
     hoursElement.innerHTML = hours;
     minutesElement.innerHTML = minutes.toLocaleString('en-US', {minimumIntegerDigits: 2,useGrouping: false});
 }

@@ -47,6 +47,10 @@ ul {
     ### Objects
 */
 
+/*
+    Pages
+*/
+
 .o-scoreboard-page {
     display: none;
 }
@@ -62,6 +66,12 @@ ul {
 .o-loader-page {
     display: block;
 }
+
+/*
+    Sets
+    ---
+    Display if the set needs to be played or not
+*/
 
 .o-set1-1 {
     display: block;
@@ -95,6 +105,10 @@ ul {
 
 /*
     ### Components
+*/
+
+/*
+    Scoreboard
 */
 
 .c-scoreboard {
@@ -213,6 +227,10 @@ ul {
     align-items: center;
     gap: 4rem;
 }
+
+/*
+    Loadingpage
+*/
 
 .c-loader {
     border: 3rem solid var(--global-color-grey); /* Light grey */
@@ -338,6 +356,12 @@ ul {
 .c-points--winner .c-points {
     gap: 7rem;
 }
+
+/*
+    Form
+    ---
+    Form to validate mac-address
+*/
 
 .c-form{
     border: 0.5rem solid white;
