@@ -59,10 +59,12 @@ function listenToSocket () {
         if (payload == true) {
             console.log("team rood mag beginnen met serveren.");
             serveTeam1.style.visibility = "visible";
+            serveTeam2.style.visibility = "hidden";
             //padelbal in scoreboard aanpassen naar rode team
         }
         else if (payload == false) {
             console.log("team blauw mag beginnen met serveren.");
+            serveTeam1.style.visibility = "hidden";
             serveTeam2.style.visibility = "visible";
             //padelbal in scoreboard aanpassen naar blauwe team
         }
@@ -236,6 +238,29 @@ function listenToSocket () {
             serveTeam1.style.visibility = "hidden";
             serveTeam2.style.visibility = "visible";
         }
+    });
+    socketio.on('B2F_reset', function () {
+
+        gamesSet1Team1.style.color  = "#FFFFFF";
+        gamesSet2Team1.style.color  = "#FFFFFF";
+        gamesSet3Team1.style.color  = "#FFFFFF";
+
+        gamesSet1Team2.style.color  = "#FFFFFF";
+        gamesSet2Team2.style.color  = "#FFFFFF";
+        gamesSet3Team2.style.color  = "#FFFFFF";
+
+        gamesSet2Team1.style.display = "none";
+        gamesSet2Team2.style.display = "none";
+        gamesSet3Team1.style.display = "none";
+        gamesSet3Team2.style.display = "none";
+
+        // serveTeam1.style.visibility = "hidden";
+        // serveTeam2.style.visibility = "hidden";
+
+        scoreboardPage.style.display = "none"
+        winnerPage.style.display = "none"
+        servePage.style.display = "block"
+
     });
 }
 

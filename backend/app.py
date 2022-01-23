@@ -12,8 +12,8 @@ from bluetooth import *
 import subprocess as sp
 import pygame
 
-# knop1up = 26
-# knop1down = 19
+knopReset = 26
+knopPower = 19
 
 # knop2up = 21
 # knop2down = 2
@@ -66,6 +66,7 @@ messageEsp = ""
 
 GPIO.setmode(GPIO.BCM)
 # GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup((knopReset, knopPower), GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'geheim!'
@@ -700,10 +701,39 @@ def score():
         time.sleep(0.1)
 
 
+def reset():
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2
+    while True:
+        if GPIO.input(knopReset) == 0:
+            # print("Reset")
+            PointsTeam1 = 0
+            PointsTeam2 = 0
+            GamesTeam1 = 0
+            GamesTeam2 = 0
+            GamesTeam1Set1 = 0
+            GamesTeam1Set2 = 0
+            GamesTeam1Set3 = 0
+            GamesTeam2Set1 = 0
+            GamesTeam2Set2 = 0
+            GamesTeam2Set3 = 0
+            Set = 0
+            stateServiceTeam1 = False
+            stateServiceTeam2 = False
+            
+            socketio.emit('B2F_reset')
+            socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
+            socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
+        
+        if GPIO.input(knopPower) == 0:
+            print("Shut down")
+            call("sudo poweroff", shell=True)
+
+        time.sleep(0.1)
+
 thread1 = threading.Timer(0.1, score)
 thread1.start()
-# thread2 = threading.Timer(1, esp_connection)
-# thread2.start()
+thread2 = threading.Timer(0.1, reset)
+thread2.start()
 
 @socketio.on('F2B_mac')
 def mac_address(payload):
