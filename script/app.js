@@ -16,6 +16,9 @@ var points2, currentGames2, games2Set1, games2Set2, games2Set3;
 // Welk team is aan de beurt om te serveren
 var stateService;
 
+// Is er al iemand gestart met serveren?
+var serviceStart =  false;
+
 // Is er connectie met de esp?
 var stateConnection = 0;
 
@@ -37,22 +40,27 @@ var macAddressValue;
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
         console.log('No esp connection');
-
+        scoreboardPage.style.display = "none";
+        servePage.style.display = "none";
+        winnerPage.style.display = "none";
+        loaderPage.style.display = "block";
     })
     socketio.on('B2F_esp_connection', function () {
         console.log('Esp connected');
-        if (stateConnection == 0) {
+        if (serviceStart == false) {
             loaderPage.style.display = "none";
             servePage.style.display = "block";
-            stateConnection = 1;
-            console.log("Connected for the first time");
+            console.log("Connected, er moet nog een eerste punt gespeeld worden")
         }
         else {
-            console.log("Loading screen");
+            loaderPage.style.display = "none";
+            scoreboardPage.style.display = "block";
+            console.log("Connected, wedstrijd kan verder gespeeld worden")
         }     
         setInterval(timerFunction, 1000);   
     })
     socketio.on('B2F_serve', function (payload) {
+        serviceStart = true;
         servePage.style.display = "none";
         scoreboardPage.style.display = "block";
         //laad scoreboard pagina

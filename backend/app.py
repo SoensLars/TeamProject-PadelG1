@@ -1,4 +1,4 @@
-from concurrent.futures import thread
+# from concurrent.futures import thread
 from socket import socket
 from RPi import GPIO
 from subprocess import check_output, call 
@@ -64,6 +64,7 @@ stateConnection = 0
 
 messageEsp = ""
 
+
 GPIO.setmode(GPIO.BCM)
 # GPIO.setup((knop1up, knop1down, knop2up, knop2down), GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup((knopReset, knopPower), GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -80,10 +81,10 @@ pygame.mixer.init()
 # addr = "C4:4F:33:77:00:13" # Draadloos
 addr = "24:62:AB:FD:24:9E" # Lars
 
-sock=BluetoothSocket(RFCOMM)
+# sock=BluetoothSocket(RFCOMM)
 buf_size = 1024;
 
-def input_and_send():
+def input_and_send(sock):
     print("\nType something\n")
     while True:
         data = input()
@@ -91,13 +92,13 @@ def input_and_send():
         sock.send(data)
         sock.send("\n")
         
-def rx_and_echo():
+def rx_and_echo(sock):
     global messageEsp
     while True:
         messageEsp = sock.recv(buf_size)
         return messageEsp
 
-def esp_connection_start():
+def esp_connection_start(sock):
     global addr
     #MAC address of ESP32
     #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
@@ -119,10 +120,10 @@ def esp_connection_start():
         
     first_match = service_matches[0]
     port = first_match["port"]
-    # name = first_match["name"]
+    name = first_match["name"]
     host = first_match["host"]
 
-    port=1
+    # port=1
     # print("connecting to \"%s\" on %s, port %s" % (name, host, port))
 
     # Create the client socket
@@ -131,6 +132,30 @@ def esp_connection_start():
     sock.send("\nconnected\n")
     print("Connected to esp32")
     socketio.emit('B2F_esp_connection')
+
+def esp_connection_reconnect(sock):
+    service_matches = find_service( address = addr )
+    # sock=BluetoothSocket(RFCOMM)
+    while len(service_matches) == 0:
+        socketio.emit('B2F_esp_no_connection')  
+        service_matches = find_service( address = addr )
+        print("couldn't find the SampleServer service =(")  
+
+    # if len(service_matches) == 0:
+    #     print("couldn't find the SampleServer service =(")
+    #     sys.exit(0)
+    first_match = service_matches[0]
+    # print(first_match)
+    port = first_match["port"]
+    name = first_match["name"]
+    host = first_match["host"]
+
+    port=1
+
+    sock.connect((host, port))
+    print("Connected to device")
+    socketio.emit('B2F_esp_connection') 
+    sock.send("\nconnected\n")
 #endregion
 
 # Sound
@@ -596,14 +621,70 @@ def points_down():
     # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
+def send_points_to_frontend(message):
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide, serviceStart
+
+    if message == b'teamRoodUp':
+        # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
+        if stateServiceTeam1 == False:
+            stateServiceTeam1 = True
+            stateServiceTeam2 = True
+            stateServiceSide = True
+            serviceStart = "red"
+            socketio.emit('B2F_serve', stateServiceSide)
+        else:
+            if Set == 2:
+                # Controleren of er een eventuele derde set moet worden gespeeld
+                if (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2) or (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2):
+                    print("Spel gedaan")
+                else:
+                    points_team1_up()
+            elif Set == 3:
+                print("Spel gedaan")
+            else:
+                points_team1_up()
+                play_sound_up()
+
+    # elif GPIO.input(knop2up) == 0:
+    elif message == b'teamBlauwUp':
+        # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
+        if stateServiceTeam2 == False:
+            stateServiceTeam1 = True
+            stateServiceTeam2 = True
+            stateServiceSide = False
+            serviceStart = "blue"
+            socketio.emit('B2F_serve', stateServiceSide)
+        else:
+            if Set == 2:
+                # Controleren of er een eventuele derde set moet worden gespeeld
+                if (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2) or (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2):
+                    print("Spel gedaan")
+                else:
+                    points_team2_up()
+            elif Set == 3:
+                print("Spel gedaan")
+            else:
+                points_team2_up()
+                play_sound_up()
+
+    # elif GPIO.input(knop1down) == 0:
+    elif message == b'teamRoodDown':
+        points_team1_down()
+        # points_down()
+
+    # elif GPIO.input(knop2down) == 0:
+    elif message == b'teamBlauwDown':
+        points_team2_down()
+
+
 # Threads
 def esp_connection():
-    global addr, connectionEsp, stateConnection
+    global addr, connectionEsp, stateConnection, message
     while True:
         #MAC address of ESP32
         #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-        #service_matches = find_service( uuid = uuid, address = addr )
-        service_matches = find_service( address = addr )
+        # service_matches = find_service( uuid = uuid, address = addr )
+        # service_matches = find_service( address = addr )
 
         if len(service_matches) == 0:
             service_matches = find_service( address = addr )
@@ -634,69 +715,30 @@ def esp_connection():
                 stateConnection = 1
             else:
                 print("Already connected")
-
-        time.sleep(10)
+            
+        time.sleep(1)
 
 def score():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, stateServiceSide, serviceStart
-    esp_connection_start()
+    sock=BluetoothSocket(RFCOMM)
+    esp_connection_start(sock)
     while True:
-        message = rx_and_echo()
-        # print((message))
-
-        # if GPIO.input(knop1up) == 0:
-        if message == b'teamRoodUp':
-            # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
-            if stateServiceTeam1 == False:
-                stateServiceTeam1 = True
-                stateServiceTeam2 = True
-                stateServiceSide = True
-                serviceStart = "red"
-                socketio.emit('B2F_serve', stateServiceSide)
-            else:
-                if Set == 2:
-                    # Controleren of er een eventuele derde set moet worden gespeeld
-                    if (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2) or (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2):
-                        print("Spel gedaan")
-                    else:
-                        points_team1_up()
-                elif Set == 3:
-                    print("Spel gedaan")
-                else:
-                    points_team1_up()
-                    play_sound_up()
-
-        # elif GPIO.input(knop2up) == 0:
-        elif message == b'teamBlauwUp':
-            # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
-            if stateServiceTeam2 == False:
-                stateServiceTeam1 = True
-                stateServiceTeam2 = True
-                stateServiceSide = False
-                serviceStart = "blue"
-                socketio.emit('B2F_serve', stateServiceSide)
-            else:
-                if Set == 2:
-                    # Controleren of er een eventuele derde set moet worden gespeeld
-                    if (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2) or (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2):
-                        print("Spel gedaan")
-                    else:
-                        points_team2_up()
-                elif Set == 3:
-                    print("Spel gedaan")
-                else:
-                    points_team2_up()
-                    play_sound_up()
-
-        # elif GPIO.input(knop1down) == 0:
-        elif message == b'teamRoodDown':
-            points_team1_down()
-            # points_down()
-
-        # elif GPIO.input(knop2down) == 0:
-        elif message == b'teamBlauwDown':
-            points_team2_down()
-            # points_down()
+        message = ""
+        try:
+            message = rx_and_echo(sock)
+            # print((message))
+        except:
+            print("Connectie opnieuw leggen")
+            # time.sleep(10)
+            sock=BluetoothSocket(RFCOMM)
+            esp_connection_reconnect(sock)
+            try:
+                while True:
+                    message = rx_and_echo(sock)
+                    send_points_to_frontend(message)
+            except:
+                print("Code fixen om te kunnen blijven reconnecten")
+    
+        send_points_to_frontend(message)
 
         time.sleep(0.1)
 
@@ -729,6 +771,7 @@ def reset():
             call("sudo poweroff", shell=True)
 
         time.sleep(0.1)
+
 
 thread1 = threading.Timer(0.1, score)
 thread1.start()
