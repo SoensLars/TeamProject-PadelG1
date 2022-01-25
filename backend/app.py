@@ -678,46 +678,6 @@ def send_points_to_frontend(message):
 
 
 # Threads
-def esp_connection():
-    global addr, connectionEsp, stateConnection, message
-    while True:
-        #MAC address of ESP32
-        #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-        # service_matches = find_service( uuid = uuid, address = addr )
-        # service_matches = find_service( address = addr )
-
-        if len(service_matches) == 0:
-            service_matches = find_service( address = addr )
-            connectionEsp = False
-        else:
-            connectionEsp = True
-
-        if connectionEsp == False:
-            print("Couldn't connect the device")
-            socketio.emit('B2F_esp_no_connection') 
-            stateConnection = 0
-        else:
-            if stateConnection == 0:
-                sock=BluetoothSocket(RFCOMM)
-                print("Connected to device")
-                first_match = service_matches[0]
-                # print(first_match)
-                port = first_match["port"]
-                name = first_match["name"]
-                host = first_match["host"]
-
-                # port=1
-
-                sock.connect((host, port))
-
-                sock.send("\nconnected\n")
-                socketio.emit('B2F_esp_connection') 
-                stateConnection = 1
-            else:
-                print("Already connected")
-            
-        time.sleep(1)
-
 def score():
     sock=BluetoothSocket(RFCOMM)
     esp_connection_start(sock)
@@ -725,23 +685,24 @@ def score():
         message = ""
         try:
             message = rx_and_echo(sock)
-            # print((message))
+            send_points_to_frontend(message)
         except:
+            # Exception voor de connectie met esp die wegvalt
             print("Connectie opnieuw leggen")
-            # time.sleep(10)
-            sock=BluetoothSocket(RFCOMM)
-            esp_connection_reconnect(sock)
-            try:
-                while True:
+            while True:
+                # Deze while blijven overlopen om te reconnecten
+                try:
+                    sock=BluetoothSocket(RFCOMM)
+                    esp_connection_reconnect(sock)
                     message = rx_and_echo(sock)
                     send_points_to_frontend(message)
-            except:
-                print("Code fixen om te kunnen blijven reconnecten")
-    
-        send_points_to_frontend(message)
+                except:
+                    print("Connectie opnieuw leggen")
+                break
+
+
 
         time.sleep(0.1)
-
 
 def reset():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2
