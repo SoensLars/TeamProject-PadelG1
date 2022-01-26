@@ -49,7 +49,7 @@ ul {
 */
 
 .o-scoreboard-page {
-    display: block;
+    display: none;
 }
 
 .o-serve-page {
@@ -61,7 +61,7 @@ ul {
 }
 
 .o-loader-page {
-    display: none;
+    display: block;
 }
 
 /*
@@ -140,7 +140,7 @@ ul {
 }
 
 .c-team-bg {
-    height: 49.5vh;
+    height: 49%;
 }
 
 .c-team-bg--red {
