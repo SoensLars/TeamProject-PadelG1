@@ -110,14 +110,14 @@ ul {
 
 .c-scoreboard {
     align-items: center;
-    border: 10px solid var(--global-color-white);
-    width: 85rem;
-    height: 28rem;
+    width: 100vw;
+    height: 100vh;
 }
 
 .c-color-score {
     display: flex;
-    width: 85rem;
+    height: 14rem;
+    justify-content: center;
 }
 
 .c-team {
@@ -125,38 +125,42 @@ ul {
     align-items: center;
     justify-content: space-between;
     background-color: var(--global-color-green);
-    padding: 0 4rem;
+    margin: 2rem auto;
     width: 71rem;
+}
+
+.c-team--red {
+    position: absolute;
+    bottom: 0;
 }
 
 .c-team h1 {
     font-size: 6rem;
+    color: var(--global-color-white);
 }
 
-.c-color-team {
-    border-right: 0.625rem solid var(--global-color-white);
-    width: 13rem;
-    height: 13.688rem;
+.c-team-bg {
+    height: 49.5vh;
 }
 
-.c-color-team-1 {
-    border-bottom: 5px solid var(--global-color-white);
-    background-color: var(--global-color-team-red);
+.c-team-bg--red {
+    background-color: var(--global-color-red);
+    border-bottom: 10px solid black;
+    position: relative;
 }
 
-.c-color-team-2 {
-    border-top: 5px solid white;
-    background-color: var(--global-color-team-blue);
+.c-team-bg--blue {
+    background-color: var(--global-color-blue);
 }
 
 .c-timer {
     font-size: 4rem;
     font-weight: bold;
-    margin-bottom: 1rem;
-    text-align: end;
-}
-.c-timer :first-child {
-    margin-left: 2rem;
+    right: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 4rem;
+    color: var(--global-color-white);
 }
 
 .c-points {
@@ -180,6 +184,10 @@ ul {
     color: var(--global-color-blue);
     align-items: center;
     justify-content: center;
+}
+
+.c-points-bg span {
+    color: var(--global-color-black);
 }
 
 .c-serve-1 {
@@ -384,7 +392,3 @@ input:focus {
 /*
     ### Utility Classes
 */
-
-.u-yellow {
-    color: var(--global-color-yellow);
-}
