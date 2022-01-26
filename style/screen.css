@@ -1,18 +1,15 @@
 :root {
     --global-color-white: #ffffff;
-    --global-color-grey: #f3f3f3;
-    --global-color-blue: #1b0550;
-    --global-color-green: #00938d;
-    --global-color-yellow: #fedf2d;
-
-    --global-color-team-red: #fe2d2d;
-    --global-color-team-blue: #2d3cfe;
+    --global-color-black: #000000;
+    --global-color-blue: #5eafe7;
+    --global-color-yellow: #fec941;
+    --global-color-red: #de2935;
 }
 
 html {
     font-size: 100%;
     font-family: Arial, Helvetica, sans-serif;
-    color: var(--global-color-white);
+    color: var(--global-color-black);
 }
 
 body {
@@ -52,7 +49,7 @@ ul {
 */
 
 .o-scoreboard-page {
-    display: none;
+    display: block;
 }
 
 .o-serve-page {
@@ -64,7 +61,7 @@ ul {
 }
 
 .o-loader-page {
-    display: block;
+    display: none;
 }
 
 /*
@@ -185,27 +182,6 @@ ul {
     justify-content: center;
 }
 
-.c-sponsors {
-    margin-top: 4rem;
-    display: flex;
-    justify-content: space-between;
-    height: 8rem;
-}
-
-.c-sponsor-board {
-    width: 30rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--global-color-blue);
-    background-color: var(--global-color-white);
-}
-
-.c-sponsor--img {
-    height: 5rem;
-    width: auto;
-}
-
 .c-serve-1 {
     height: 4rem;
     width: 4rem;
@@ -232,54 +208,33 @@ ul {
     Loadingpage
 */
 
-.c-loader {
-    border: 3rem solid var(--global-color-grey); /* Light grey */
-    border-top: 3rem solid var(--global-color-green);
-    border-radius: 50%;
-    width: 20rem;
-    height: 20rem;
-    animation: spin 2s linear infinite;
-    margin: auto;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 .c-loading {
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    align-items: center;
 }
 
 .c-loading h1 {
     font-size: 6rem;
     margin-bottom: 4rem;
 }
-.c-span--on {
-    color: var(--global-color-yellow);
+
+.c-device {
+    height: 16rem;
+    width: 56rem;
 }
 
-.c-span--serve {
-    color: var(--global-color-yellow);
-    font-size: 5rem;
-    font-weight: bold;
-}
 .c-serve {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    gap: 4rem;
+    gap: 6rem;
 }
 
 .c-serve h1 {
-    font-size: 5rem;
+    font-size: 6rem;
     width: 59rem;
 }
 
@@ -287,6 +242,8 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 46rem;
+    margin: auto;
 }
 
 .c-teambtn p {
@@ -295,8 +252,8 @@ ul {
 }
 
 .c-teambtn-svg {
-    width: 15rem;
-    height: 15rem;
+    width: 13rem;
+    height: 13rem;
 }
 
 .c-winner--title {
@@ -363,7 +320,7 @@ ul {
     Form to validate mac-address
 */
 
-.c-form{
+.c-form {
     border: 0.5rem solid white;
     border-radius: 3rem;
     padding: 4rem;
@@ -372,7 +329,7 @@ ul {
     gap: 1rem;
 }
 
-.c-form button{
+.c-form button {
     background-color: var(--global-color-green);
     color: white;
     border: none;
@@ -383,26 +340,26 @@ ul {
     border-radius: 1rem;
 }
 
-.c-form button:hover{
+.c-form button:hover {
     cursor: pointer;
 }
 
-.c-form button:focus{
+.c-form button:focus {
     outline: none;
 }
 
-.c-label{
+.c-label {
     font-size: 3rem;
     font-weight: bold;
 }
 
-.c-settings h1{
+.c-settings h1 {
     color: var(--global-color-yellow);
     font-size: 6rem;
     margin-bottom: 4rem;
 }
 
-.c-input{
+.c-input {
     text-align: center;
     height: 5rem;
     border-radius: 1rem;
@@ -413,12 +370,14 @@ ul {
     margin-bottom: 3rem;
 }
 
-.c-input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: var(--global-color-blue);
-  opacity: 1; /* Firefox */
+.c-input::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--global-color-blue);
+    opacity: 1; /* Firefox */
 }
 
-.c-input:focus, input:focus{
+.c-input:focus,
+input:focus {
     outline: none;
 }
 
