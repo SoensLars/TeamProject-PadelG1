@@ -37,21 +37,25 @@ GamesTeam2Set3 = 0
 Set = 0
 
 # Previous points
-prevPoints1 = 0
-prevPoints2 = 0
+# prevPoints1 = 0
+# prevPoints2 = 0
 
-prevGames1 = 0
-prevGames2 = 0
+# prevGames1 = 0
+# prevGames2 = 0
 
-prevGames1Set1 = 0
-prevGames1Set2 = 0
-prevGames1Set3 = 0
+# prevGames1Set1 = 0
+# prevGames1Set2 = 0
+# prevGames1Set3 = 0
 
-prevGames2Set1 = 0
-prevGames2Set2 = 0
-prevGames2Set3 = 0
+# prevGames2Set1 = 0
+# prevGames2Set2 = 0
+# prevGames2Set3 = 0
 
-prevSets = 0
+# prevSets = 0
+lastScored = ""
+prevPoint = 0
+prevPoint1 = 0
+prevPoint2 = 0
 
 # Controleren of het eerste punt voor het echte spel al is gespeeld
 stateServiceTeam1 = False
@@ -75,11 +79,11 @@ socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger
 CORS(app)
 
 pygame.mixer.init()
-
 #region -- Code ESP Connection   
 # addr = "08:3A:F2:AC:2A:DE" # Thomas
 # addr = "C4:4F:33:77:00:13" # Draadloos
 addr = "24:62:AB:FD:24:9E" # Lars
+# addr = "24:62:AB:FD:24:9R" # test
 
 # sock=BluetoothSocket(RFCOMM)
 buf_size = 1024;
@@ -160,13 +164,19 @@ def esp_connection_reconnect(sock):
 
 # Sound
 def play_sound_up():
-    pygame.mixer.music.load("/home/lars/Project/sounds/beep.mp3")
+    pygame.mixer.music.load("/home/lars/Project/sounds/beep_up.mp3")
+    pygame.mixer.music.play()
+
+def play_sound_down():
+    pygame.mixer.music.load("/home/lars/Project/sounds/beep_down.mp3")
     pygame.mixer.music.play()
 
 # Functions points
 def points_team1_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart
-
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint1
+    prevPoint1 = PointsTeam1
+    lastScored = "red"
+    prevPoint = PointsTeam1
     # Punten verhogen voor 1 game als het aantal games lager is dan 5
     if GamesTeam1 < 5:
         if PointsTeam1 == 0:
@@ -361,8 +371,10 @@ def points_team1_up():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
 
 def points_team2_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart
-    
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint2
+    prevPoint2 = PointsTeam2
+    lastScored = "blue"
+    prevPoint = PointsTeam2
     if GamesTeam2 < 5:
         if PointsTeam2 == 0:
             PointsTeam2 = 15
@@ -600,18 +612,41 @@ def points_team2_down():
     print(f"") 
 
 def points_down():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set
-
-    PointsTeam1 = prevPoints1
-    GamesTeam1 = prevGames1
-
-    if PointsTeam1 == 0:
-        if Set == 0:
-            GamesTeam1Set1 = GamesTeam1
-        elif Set == 1:
-            GamesTeam1Set2 = GamesTeam1
-        elif Set == 2:
-            GamesTeam1Set3 = GamesTeam1
+    global PointsTeam1, PointsTeam2, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1Set1, GamesTeam2Set1
+    if lastScored == "red":
+        if PointsTeam1 == "AD":
+            PointsTeam1 = prevPoint
+            PointsTeam2 = 40
+        elif PointsTeam1 == 0 and PointsTeam2 == 0:
+            if GamesTeam1Set1 != 0:
+                GamesTeam1Set1 -= 1
+                if prevPoint1 == "AD":
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = "-"
+                else:
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = prevPoint2
+            else: 
+                pass
+        else:
+            PointsTeam1 = prevPoint
+    elif lastScored == "blue":
+        if PointsTeam2 == "AD":
+            PointsTeam2 = prevPoint
+            PointsTeam1 = 40
+        elif PointsTeam2 == 0 and PointsTeam1 == 0:
+            if GamesTeam2Set1 != 0:
+                GamesTeam2Set1 -= 1
+                if prevPoint2 == "AD":
+                    PointsTeam1 = "-"
+                    PointsTeam2 = prevPoint2
+                else:
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = prevPoint2
+            else: 
+                pass
+        else:
+            PointsTeam2 = prevPoint
 
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
@@ -639,6 +674,7 @@ def send_points_to_frontend(message):
                     print("Spel gedaan")
                 else:
                     points_team1_up()
+                    play_sound_up()
             elif Set == 3:
                 print("Spel gedaan")
             else:
@@ -661,6 +697,7 @@ def send_points_to_frontend(message):
                     print("Spel gedaan")
                 else:
                     points_team2_up()
+                    play_sound_up()
             elif Set == 3:
                 print("Spel gedaan")
             else:
@@ -669,12 +706,15 @@ def send_points_to_frontend(message):
 
     # elif GPIO.input(knop1down) == 0:
     elif message == b'teamRoodDown':
-        points_team1_down()
-        # points_down()
+        # points_team1_down()
+        points_down()
+        play_sound_down()
 
     # elif GPIO.input(knop2down) == 0:
     elif message == b'teamBlauwDown':
-        points_team2_down()
+        # points_team2_down()
+        points_down()
+        play_sound_down()
 
 
 # Threads

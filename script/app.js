@@ -48,13 +48,18 @@ function listenToSocket () {
     socketio.on('B2F_esp_connection', function () {
         console.log('Esp connected');
         if (serviceStart == false) {
+            // document.html.style.backgroundColor = "red";
+            scoreboardPage.style.display = "none";
             loaderPage.style.display = "none";
             servePage.style.display = "block";
+            document.body.style.background = "#FEC941";
             console.log("Connected, er moet nog een eerste punt gespeeld worden")
         }
         else {
             loaderPage.style.display = "none";
+            servePage.style.display = "none";
             scoreboardPage.style.display = "block";
+            document.body.style.background = "#5EAFE7"
             console.log("Connected, wedstrijd kan verder gespeeld worden")
         }     
         setInterval(timerFunction, 1000);   
@@ -63,6 +68,7 @@ function listenToSocket () {
         serviceStart = true;
         servePage.style.display = "none";
         scoreboardPage.style.display = "block";
+        document.body.style.background = "#5EAFE7"
         //laad scoreboard pagina
         if (payload == true) {
             console.log("team rood mag beginnen met serveren.");
@@ -269,6 +275,8 @@ function listenToSocket () {
         winnerPage.style.display = "none"
         servePage.style.display = "block"
 
+        document.body.style.background = "#FEC941"
+
     });
 }
 
@@ -323,7 +331,7 @@ function init () {
 
     // console.log(window.location.hostname)
     listenToSocket();
-    listenToUI();
+    // listenToUI();
      
 }
 
