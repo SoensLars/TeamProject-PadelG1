@@ -100,34 +100,49 @@ function listenToSocket () {
         gamesSet3Team1.innerHTML = games1Set3;
 
         // Games van set 2 weergeven
+        if (sets == 0)   {
+            gamesSet2Team1.style.display  = "none";
+            gamesSet2Team2.style.display  = "none";
+            gamesSet1Team1.style.color  = "#FFFFFF";
+            gamesSet1Team2.style.color  = "#FFFFFF";
+        } 
+
         if (sets == 1)   {
+            winnerPage.style.display = "none";
+            scoreboardPage.style.display = "block";
             gamesSet2Team1.style.display  = "block";
             gamesSet2Team2.style.display  = "block";
+            gamesSet3Team1.style.display  = "none";
+            gamesSet3Team2.style.display  = "none";
+            gamesSet2Team1.style.color  = "#FFFFFF";
+            gamesSet2Team2.style.color  = "#FFFFFF";
             if (games1Set1 > games2Set1) {
-                gamesSet1Team1.style.color  = "#FEDF2D";
+                gamesSet1Team1.style.color  = "#fec941";
             }
             else {
-                gamesSet1Team2.style.color  = "#FEDF2D";
+                gamesSet1Team2.style.color  = "#fec941";
             }
         }   
 
         // Games van set 3 weergeven indien de match niet beindigd is
         if (sets == 2)   {
             // Match is beindigd
+            winnerPage.style.display = "none";
+            scoreboardPage.style.display = "block";
             if ((games1Set1 > games2Set1 && games1Set2 > games2Set2) || (games2Set1 > games1Set1 && games2Set2 > games1Set2)) {
-                gamesSet3Team1.style.display  = "hidden";
-                gamesSet3Team2.style.display  = "hidden";
+                gamesSet3Team1.style.display  = "none";
+                gamesSet3Team2.style.display  = "none";
                 scoreboardPage.style.display = "none";
                 winnerPage.style.display = "block";
                 if (games1Set2 > games2Set2) {
-                    gamesSet2Team1.style.color  = "#FEDF2D";
+                    gamesSet2Team1.style.color  = "#fec941";
                     winnerTeam.innerHTML = "Red";
                     winnerTeamBg.style.backgroundColor = "#fe2d2d"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
                     pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li class="u-yellow">${games1Set2}</li></ul>`;
                     pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li></ul>`;
                 }
                 else {
-                    gamesSet2Team2.style.color  = "#FEDF2D";
+                    gamesSet2Team2.style.color  = "#fec941";
                     winnerTeam.innerHTML = "Blue";
                     winnerTeamBg.style.backgroundColor = "#2d3cfe";
                     pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li></ul>`;
@@ -138,11 +153,13 @@ function listenToSocket () {
             else {
                 gamesSet3Team1.style.display  = "block";
                 gamesSet3Team2.style.display  = "block";
+                gamesSet3Team1.style.color  = "#FFFFFF";
+                gamesSet3Team2.style.color  = "#FFFFFF";
                 if (games1Set2 > games2Set2) {
-                    gamesSet2Team1.style.color  = "#FEDF2D";
+                    gamesSet2Team1.style.color  = "#fec941";
                 }
                 else {
-                    gamesSet2Team2.style.color  = "#FEDF2D";
+                    gamesSet2Team2.style.color  = "#fec941";
                 }
             }
         }
@@ -151,7 +168,7 @@ function listenToSocket () {
             scoreboardPage.style.display = "none";
             winnerPage.style.display = "block";
             if (games1Set3 > games2Set3) {
-                gamesSet2Team1.style.color  = "#FEDF2D";
+                gamesSet2Team1.style.color  = "#fec941";
                 winnerTeam.innerHTML = "Red";
                 winnerTeamBg.style.backgroundColor = "#fe2d2d"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
                 if (games1Set1 > games2Set1) {
@@ -164,7 +181,7 @@ function listenToSocket () {
                 }
             }
             else {
-                gamesSet2Team2.style.color  = "#FEDF2D";
+                gamesSet2Team2.style.color  = "#fec941";
                 winnerTeam.innerHTML = "Blue";
                 winnerTeamBg.style.backgroundColor = "#2d3cfe";
                 if (games1Set1 > games2Set1) {

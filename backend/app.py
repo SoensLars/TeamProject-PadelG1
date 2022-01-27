@@ -81,8 +81,8 @@ CORS(app)
 pygame.mixer.init()
 #region -- Code ESP Connection   
 # addr = "08:3A:F2:AC:2A:DE" # Thomas
-# addr = "C4:4F:33:77:00:13" # Draadloos
-addr = "24:62:AB:FD:24:9E" # Lars
+addr = "C4:4F:33:77:00:13" # Draadloos
+# addr = "24:62:AB:FD:24:9E" # Lars
 # addr = "24:62:AB:FD:24:9R" # test
 
 # sock=BluetoothSocket(RFCOMM)
@@ -102,7 +102,7 @@ def rx_and_echo(sock):
         messageEsp = sock.recv(buf_size)
         return messageEsp
 
-def esp_connection_start(sock):
+def esp_connection(sock):
     global addr
     #MAC address of ESP32
     #uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
@@ -114,9 +114,9 @@ def esp_connection_start(sock):
         print("couldn't find the SampleServer service =(")
         socketio.emit('B2F_esp_no_connection')    
 
-    if len(service_matches) == 0:
-        print("couldn't find the SampleServer service =(")
-        sys.exit(0)
+    # if len(service_matches) == 0:
+    #     print("couldn't find the SampleServer service =(")
+    #     sys.exit(0)
 
     # for s in range(len(service_matches)):
     #     print("\nservice_matches: [" + str(s) + "]:")
@@ -136,30 +136,6 @@ def esp_connection_start(sock):
     sock.send("\nconnected\n")
     print("Connected to esp32")
     socketio.emit('B2F_esp_connection')
-
-def esp_connection_reconnect(sock):
-    service_matches = find_service( address = addr )
-    # sock=BluetoothSocket(RFCOMM)
-    while len(service_matches) == 0:
-        socketio.emit('B2F_esp_no_connection')  
-        service_matches = find_service( address = addr )
-        print("couldn't find the SampleServer service =(")  
-
-    # if len(service_matches) == 0:
-    #     print("couldn't find the SampleServer service =(")
-    #     sys.exit(0)
-    first_match = service_matches[0]
-    # print(first_match)
-    port = first_match["port"]
-    name = first_match["name"]
-    host = first_match["host"]
-
-    port=1
-
-    sock.connect((host, port))
-    print("Connected to device")
-    socketio.emit('B2F_esp_connection') 
-    sock.send("\nconnected\n")
 #endregion
 
 # Sound
@@ -173,8 +149,9 @@ def play_sound_down():
 
 # Functions points
 def points_team1_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint1
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint1, prevPoint2
     prevPoint1 = PointsTeam1
+    prevPoint2 = PointsTeam2
     lastScored = "red"
     prevPoint = PointsTeam1
     # Punten verhogen voor 1 game als het aantal games lager is dan 5
@@ -211,6 +188,9 @@ def points_team1_up():
             elif Set == 2:
                 GamesTeam1Set3 += 1
             stateServiceSide = not stateServiceSide
+        elif PointsTeam1 == "-":
+            PointsTeam1 = 40
+            PointsTeam2 = 40
     # Als het aantal gewonnen games 5 is en het aantal gewonnen games van team 2 lager dan 5, set verhogen   
     elif GamesTeam1 == 5 and GamesTeam2 <= 4:
         if PointsTeam1 == 0:
@@ -248,7 +228,10 @@ def points_team1_up():
             elif Set == 2:
                 GamesTeam1Set3 += 1
             stateServiceSide = not stateServiceSide
-            Set += 1    
+            Set += 1 
+        elif PointsTeam1 == "-":
+            PointsTeam1 = 40
+            PointsTeam2 = 40   
     elif (GamesTeam1 >= 5 and GamesTeam2 > 4):
         # Tiebreak spelen of niet
         if (GamesTeam1 == 6 and GamesTeam2 == 6):
@@ -325,6 +308,9 @@ def points_team1_up():
                     elif Set == 2:
                         GamesTeam1Set3 += 1
                     stateServiceSide = not stateServiceSide 
+                elif PointsTeam1 == "-":
+                    PointsTeam1 = 40
+                    PointsTeam2 = 40
             else: # Wel een verschil van 2 dus set verhogen
                 if PointsTeam1 == 0:   
                     PointsTeam1 = 15
@@ -362,6 +348,9 @@ def points_team1_up():
                         GamesTeam1Set3 += 1
                     stateServiceSide = not stateServiceSide
                     Set += 1 
+                elif PointsTeam1 == "-":
+                    PointsTeam1 = 40
+                    PointsTeam2 = 40
         
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3,'points': PointsTeam1, 'stateService': stateServiceSide})    
@@ -371,7 +360,8 @@ def points_team1_up():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
 
 def points_team2_up():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint2
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint1, prevPoint2
+    prevPoint1 = PointsTeam1
     prevPoint2 = PointsTeam2
     lastScored = "blue"
     prevPoint = PointsTeam2
@@ -408,6 +398,9 @@ def points_team2_up():
             elif Set == 2:
                 GamesTeam2Set3 += 1
             stateServiceSide = not stateServiceSide
+        elif PointsTeam2 == "-":
+            PointsTeam1 = 40
+            PointsTeam2 = 40
     # Als het aantal gewonnen games 5 is en het aantal gewonnen games van team 1 lager dan 5, set verhogen   
     elif GamesTeam2 == 5 and GamesTeam1 <= 4:
         if PointsTeam2 == 0:
@@ -446,6 +439,9 @@ def points_team2_up():
                 GamesTeam2Set3 += 1
             stateServiceSide = not stateServiceSide
             Set += 1    
+        elif PointsTeam2 == "-":
+            PointsTeam1 = 40
+            PointsTeam2 = 40
     elif GamesTeam2 >= 5 and GamesTeam1 > 4:
         # Tiebreak spelen
         if (GamesTeam2 == 6 and GamesTeam1 == 6):
@@ -522,6 +518,9 @@ def points_team2_up():
                     elif Set == 2:
                         GamesTeam2Set3 += 1   
                     stateServiceSide = not stateServiceSide 
+                elif PointsTeam2 == "-":
+                    PointsTeam1 = 40
+                    PointsTeam2 = 40
             else: # Wel een verschil van 2 dus set verhogen
                 if PointsTeam2 == 0:
                     PointsTeam2 = 15
@@ -559,6 +558,9 @@ def points_team2_up():
                         GamesTeam2Set3 += 1
                     stateServiceSide = not stateServiceSide
                     Set += 1 
+                elif PointsTeam2 == "-":
+                    PointsTeam1 = 40
+                    PointsTeam2 = 40
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3, 'points': PointsTeam1, 'stateService': stateServiceSide})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
@@ -611,42 +613,167 @@ def points_team2_down():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
+# def points_down():
+#     global PointsTeam1, PointsTeam2, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1Set1, GamesTeam2Set1
+#     if lastScored == "red":
+#         if PointsTeam1 == "AD":
+#             PointsTeam1 = prevPoint
+#             PointsTeam2 = 40
+#         elif PointsTeam1 == 0 and PointsTeam2 == 0:
+#             if GamesTeam1Set1 != 0:
+#                 GamesTeam1Set1 -= 1
+#                 if prevPoint1 == "AD":
+#                     PointsTeam1 = prevPoint1
+#                     PointsTeam2 = "-"
+#                 else:
+#                     PointsTeam1 = prevPoint1
+#                     PointsTeam2 = prevPoint2
+#             else: 
+#                 pass
+#         else:
+#             PointsTeam1 = prevPoint
+#     elif lastScored == "blue":
+#         if PointsTeam2 == "AD":
+#             PointsTeam2 = prevPoint
+#             PointsTeam1 = 40
+#         elif PointsTeam2 == 0 and PointsTeam1 == 0:
+#             if GamesTeam2Set1 != 0:
+#                 GamesTeam2Set1 -= 1
+#                 if prevPoint2 == "AD":
+#                     PointsTeam1 = "-"
+#                     PointsTeam2 = prevPoint2
+#                 else:
+#                     PointsTeam1 = prevPoint1
+#                     PointsTeam2 = prevPoint2
+#             else: 
+#                 pass
+#         else:
+#             PointsTeam2 = prevPoint
+
+
+#     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
+#     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
+#     # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
+#     # print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
+#     # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
+#     print(f"") 
+
 def points_down():
-    global PointsTeam1, PointsTeam2, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1Set1, GamesTeam2Set1
+    global PointsTeam1, PointsTeam2, Set, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam2Set1, GamesTeam1Set2, GamesTeam2Set2, GamesTeam1Set3, GamesTeam2Set3, stateServiceSide
     if lastScored == "red":
-        if PointsTeam1 == "AD":
-            PointsTeam1 = prevPoint
-            PointsTeam2 = 40
-        elif PointsTeam1 == 0 and PointsTeam2 == 0:
-            if GamesTeam1Set1 != 0:
-                GamesTeam1Set1 -= 1
-                if prevPoint1 == "AD":
-                    PointsTeam1 = prevPoint1
-                    PointsTeam2 = "-"
+        if Set == 0:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0:
+                    pass
                 else:
+                    GamesTeam1Set1 -= 1
+                    GamesTeam1 -= 1
                     PointsTeam1 = prevPoint1
                     PointsTeam2 = prevPoint2
-            else: 
-                pass
-        else:
-            PointsTeam1 = prevPoint
+                    stateServiceSide = not stateServiceSide
+            else:
+                # Punten team rood terugzetten, blauw ongewijzigd
+                PointsTeam1 = prevPoint
+        if Set == 1:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    Set = 0
+                    # GamesTeam1Set1 -= 1
+                    GamesTeam1 = GamesTeam1Set1
+                    GamesTeam2 = GamesTeam2Set1
+                    stateServiceSide = not stateServiceSide # niet helemaal zeker
+                else:
+                    GamesTeam1Set2 -= 1
+                    GamesTeam1 -= 1
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = prevPoint2
+                    stateServiceSide = not stateServiceSide
+            else:
+                # Punten team rood terugzetten, blauw ongewijzigd
+                PointsTeam1 = prevPoint
+        elif Set == 2:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    Set = 1
+                    # GamesTeam1Set1 -= 1
+                    GamesTeam1 = GamesTeam1Set2
+                    GamesTeam2 = GamesTeam2Set2
+                    stateServiceSide = not stateServiceSide # niet helemaal zeker
+                else:
+                    GamesTeam1Set3 -= 1
+                    GamesTeam1 -= 1
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = prevPoint2
+                    stateServiceSide = not stateServiceSide
+            else:
+                # Punten team rood terugzetten, blauw ongewijzigd
+                PointsTeam1 = prevPoint
+        elif Set == 3:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    Set = 2
+                    # GamesTeam2Set1 -= 1
+                    # GamesTeam2 -= 1
+                    GamesTeam1 = GamesTeam1Set3
+                    GamesTeam2 = GamesTeam2Set3
+                    stateServiceSide = not stateServiceSide # niet helemaal zeker
     elif lastScored == "blue":
-        if PointsTeam2 == "AD":
-            PointsTeam2 = prevPoint
-            PointsTeam1 = 40
-        elif PointsTeam2 == 0 and PointsTeam1 == 0:
-            if GamesTeam2Set1 != 0:
-                GamesTeam2Set1 -= 1
-                if prevPoint2 == "AD":
-                    PointsTeam1 = "-"
-                    PointsTeam2 = prevPoint2
+        if Set == 0:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    pass
                 else:
+                    GamesTeam2Set1 -= 1
+                    GamesTeam2 -= 1
                     PointsTeam1 = prevPoint1
                     PointsTeam2 = prevPoint2
-            else: 
-                pass
-        else:
-            PointsTeam2 = prevPoint
+                    stateServiceSide = not stateServiceSide
+            else:
+                # Punten team blauw terugzetten, rood ongewijzigd
+                PointsTeam2 = prevPoint
+        elif Set == 1:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    Set = 0
+                    # GamesTeam2Set1 -= 1
+                    # GamesTeam2 -= 1
+                    GamesTeam1 = GamesTeam1Set1
+                    GamesTeam2 = GamesTeam2Set1
+                    stateServiceSide = not stateServiceSide # niet helemaal zeker
+                else:
+                    GamesTeam2Set2 -= 1
+                    GamesTeam2 -= 1
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = prevPoint2
+                    stateServiceSide = not stateServiceSide
+            else:
+                # Punten team rood terugzetten, blauw ongewijzigd
+                PointsTeam1 = prevPoint
+        elif Set == 2:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    Set = 1
+                    # GamesTeam2Set1 -= 1
+                    # GamesTeam2 -= 1
+                    GamesTeam1 = GamesTeam1Set2
+                    GamesTeam2 = GamesTeam2Set2
+                    stateServiceSide = not stateServiceSide # niet helemaal zeker
+                else:
+                    GamesTeam2Set3 -= 1
+                    GamesTeam2 -= 1
+                    PointsTeam1 = prevPoint1
+                    PointsTeam2 = prevPoint2
+                    stateServiceSide = not stateServiceSide
+        elif Set == 3:
+            if PointsTeam1 == 0 and PointsTeam2 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                    Set = 2
+                    # GamesTeam2Set1 -= 1
+                    # GamesTeam2 -= 1
+                    GamesTeam1 = GamesTeam1Set3
+                    GamesTeam2 = GamesTeam2Set3
+                    stateServiceSide = not stateServiceSide # niet helemaal zeker
+
 
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
@@ -720,7 +847,7 @@ def send_points_to_frontend(message):
 # Threads
 def score():
     sock=BluetoothSocket(RFCOMM)
-    esp_connection_start(sock)
+    esp_connection(sock)
     while True:
         message = ""
         try:
@@ -733,14 +860,12 @@ def score():
                 # Deze while blijven overlopen om te reconnecten
                 try:
                     sock=BluetoothSocket(RFCOMM)
-                    esp_connection_reconnect(sock)
+                    esp_connection(sock)
                     message = rx_and_echo(sock)
                     send_points_to_frontend(message)
                 except:
                     print("Connectie opnieuw leggen")
                 break
-
-
 
         time.sleep(0.1)
 
