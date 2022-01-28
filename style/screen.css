@@ -65,7 +65,7 @@ ul {
 }
 
 .o-sponsor-page{
- display: none;
+ display: block;
 }
 
 /*
@@ -425,6 +425,11 @@ input:focus {
     height: 12rem;
     object-fit: contain;
     border-radius: 1rem;
+}
+
+.c-countdown{
+    font-size: 5rem;
+    font-weight: bold;
 }
 
 /*

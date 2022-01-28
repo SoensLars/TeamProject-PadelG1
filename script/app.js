@@ -37,6 +37,11 @@ var hours = 0, minutes = 0;
 let button, macAddress;
 var macAddressValue;
 
+// Counter
+var timeLeft = 30;
+let timer;
+var timerId = setInterval(counter, 1000);
+
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
         console.log('No esp connection');
@@ -313,6 +318,16 @@ function timerFunction() {
     minutesElement.innerHTML = minutes.toLocaleString('en-US', {minimumIntegerDigits: 2,useGrouping: false});
 }
 
+function counter(){
+    if (timeLeft == 0) {
+        clearTimeout(timerId);
+        //socket stop
+    } else {
+        timer.innerHTML = timeLeft;
+        timeLeft--;
+    }
+}
+
 function init () {
     scoreboardPage = document.querySelector('.js-scoreboard-page');
     servePage = document.querySelector('.js-serve-page');
@@ -345,6 +360,8 @@ function init () {
 
     button = document.querySelector('.js-button-form');
     macAddress = document.querySelector('.js-mac');
+
+    timer = document.getElementById('Timer');
 
     // console.log(window.location.hostname)
     listenToSocket();
