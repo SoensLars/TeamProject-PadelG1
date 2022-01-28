@@ -65,7 +65,7 @@ ul {
 }
 
 .o-sponsor-page{
-
+ display: none;
 }
 
 /*
@@ -417,6 +417,7 @@ input:focus {
     margin: auto;
     background-color: var(--global-color-white);
     border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
 }
 
 .c-sponsor-img{
