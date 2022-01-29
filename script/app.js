@@ -3,7 +3,7 @@
 const lanIP = `${window.location.hostname}:5000`;
 const socketio = io(`http://${lanIP}`);
 
-let scoreboardPage, servePage, winnerPage, loaderPage;
+let scoreboardPage, servePage, winnerPage, loaderPage, sponsorPage;
 
 // Html elements
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1;
@@ -33,14 +33,13 @@ let pointsWinner1, pointsWinner2;
 let hoursElement, minutesElement;
 var hours = 0, minutes = 0;
 
+// Timer
+let timerElement;
+var seconds = 31;
+
 // Form
 let button, macAddress;
 var macAddressValue;
-
-// Counter
-var timeLeft = 30;
-let timer;
-var timerId = setInterval(counter, 1000);
 
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
@@ -66,8 +65,7 @@ function listenToSocket () {
             scoreboardPage.style.display = "block";
             document.body.style.background = "#5EAFE7"
             console.log("Connected, wedstrijd kan verder gespeeld worden")
-        }     
-        setInterval(timerFunction, 1000);   
+        }       
     })
     socketio.on('B2F_serve', function (payload) {
         serviceStart = true;
@@ -275,6 +273,17 @@ function listenToSocket () {
             serveTeam2.style.visibility = "visible";
         }
     });
+    socketio.on('B2F_show_sponsors', function () {
+        seconds = 31
+        document.body.style.background = "#fec941";
+        scoreboardPage.style.display = "none";
+        sponsorPage.style.display = "block";
+    });
+    socketio.on('B2F_hide_sponsors', function () {
+        document.body.style.background = "#5eafe7";
+        scoreboardPage.style.display = "block";
+        sponsorPage.style.display = "none"
+    });
     socketio.on('B2F_reset', function () {
 
         gamesSet1Team1.style.color  = "#FFFFFF";
@@ -310,7 +319,7 @@ function listenToUI () {
     });
 }
 
-function timerFunction() {
+function timerFunction () {
     const today = new Date();
     hours = today.getHours();
     minutes = today.getMinutes();
@@ -318,14 +327,9 @@ function timerFunction() {
     minutesElement.innerHTML = minutes.toLocaleString('en-US', {minimumIntegerDigits: 2,useGrouping: false});
 }
 
-function counter(){
-    if (timeLeft == 0) {
-        clearTimeout(timerId);
-        //socket stop
-    } else {
-        timer.innerHTML = timeLeft;
-        timeLeft--;
-    }
+function countdownFunction () {
+    seconds -= 1;
+    timerElement.innerHTML = seconds;
 }
 
 function init () {
@@ -333,6 +337,7 @@ function init () {
     servePage = document.querySelector('.js-serve-page');
     winnerPage = document.querySelector('.js-winner-page');
     loaderPage = document.querySelector('.js-loader-page');
+    sponsorPage = document.querySelector('.js-sponsor-page');
 
     pointsTeam1 = document.querySelector('.js-points-1');
     currentGames1 = document.querySelector('.js-games-1');
@@ -358,14 +363,16 @@ function init () {
     hoursElement = document.querySelector('.js-hours');
     minutesElement = document.querySelector('.js-minutes');
 
+    timerElement = document.querySelector('.js-countdown');
+
     button = document.querySelector('.js-button-form');
     macAddress = document.querySelector('.js-mac');
-
-    timer = document.getElementById('Timer');
 
     // console.log(window.location.hostname)
     listenToSocket();
     // listenToUI();
+    setInterval(timerFunction, 1000); 
+    setInterval(countdownFunction, 1000);
      
 }
 

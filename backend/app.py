@@ -80,10 +80,8 @@ CORS(app)
 
 pygame.mixer.init()
 #region -- Code ESP Connection   
-# addr = "08:3A:F2:AC:2A:DE" # Thomas
 addr = "C4:4F:33:77:00:13" # Draadloos
 # addr = "24:62:AB:FD:24:9E" # Lars
-# addr = "24:62:AB:FD:24:9R" # test
 
 # sock=BluetoothSocket(RFCOMM)
 buf_size = 1024;
@@ -613,51 +611,6 @@ def points_team2_down():
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
-# def points_down():
-#     global PointsTeam1, PointsTeam2, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1Set1, GamesTeam2Set1
-#     if lastScored == "red":
-#         if PointsTeam1 == "AD":
-#             PointsTeam1 = prevPoint
-#             PointsTeam2 = 40
-#         elif PointsTeam1 == 0 and PointsTeam2 == 0:
-#             if GamesTeam1Set1 != 0:
-#                 GamesTeam1Set1 -= 1
-#                 if prevPoint1 == "AD":
-#                     PointsTeam1 = prevPoint1
-#                     PointsTeam2 = "-"
-#                 else:
-#                     PointsTeam1 = prevPoint1
-#                     PointsTeam2 = prevPoint2
-#             else: 
-#                 pass
-#         else:
-#             PointsTeam1 = prevPoint
-#     elif lastScored == "blue":
-#         if PointsTeam2 == "AD":
-#             PointsTeam2 = prevPoint
-#             PointsTeam1 = 40
-#         elif PointsTeam2 == 0 and PointsTeam1 == 0:
-#             if GamesTeam2Set1 != 0:
-#                 GamesTeam2Set1 -= 1
-#                 if prevPoint2 == "AD":
-#                     PointsTeam1 = "-"
-#                     PointsTeam2 = prevPoint2
-#                 else:
-#                     PointsTeam1 = prevPoint1
-#                     PointsTeam2 = prevPoint2
-#             else: 
-#                 pass
-#         else:
-#             PointsTeam2 = prevPoint
-
-
-#     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
-#     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
-#     # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
-#     # print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
-#     # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
-#     print(f"") 
-
 def points_down():
     global PointsTeam1, PointsTeam2, Set, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam2Set1, GamesTeam1Set2, GamesTeam2Set2, GamesTeam1Set3, GamesTeam2Set3, stateServiceSide
     if lastScored == "red":
@@ -720,7 +673,7 @@ def points_down():
     elif lastScored == "blue":
         if Set == 0:
             if PointsTeam1 == 0 and PointsTeam2 == 0:
-                if GamesTeam1 == 0 and GamesTeam2 == 0:
+                if GamesTeam2 == 0:
                     pass
                 else:
                     GamesTeam2Set1 -= 1
@@ -773,7 +726,6 @@ def points_down():
                     GamesTeam1 = GamesTeam1Set3
                     GamesTeam2 = GamesTeam2Set3
                     stateServiceSide = not stateServiceSide # niet helemaal zeker
-
 
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
@@ -843,7 +795,6 @@ def send_points_to_frontend(message):
         points_down()
         play_sound_down()
 
-
 # Threads
 def score():
     sock=BluetoothSocket(RFCOMM)
@@ -869,6 +820,44 @@ def score():
 
         time.sleep(0.1)
 
+stateSponsorsSet1 = 0
+stateSponsorsSet2 = 0
+
+def sponsors():
+    global GamesTeam1, GamesTeam2, PointsTeam1, PointsTeam2, Set, stateSponsorsSet1, stateSponsorsSet2
+    while True:
+        if Set == 0:
+            pass
+        elif Set == 1:
+            if stateSponsorsSet1 == 0:
+                if GamesTeam1 == 0 and GamesTeam2 == 0 and PointsTeam1 == 0 and PointsTeam2 == 0:
+                    time.sleep(5)
+                    print('Show sponsors')
+                    socketio.emit('B2F_show_sponsors')
+                    time.sleep(30)
+                    print('Hide sponsors')
+                    socketio.emit('B2F_hide_sponsors')
+                    stateSponsorsSet1 = 1
+            else:
+                pass
+        elif Set == 2:
+            if (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2) or (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2):
+                pass
+            else:
+                if stateSponsorsSet2 == 0:
+                    if GamesTeam1 == 0 and GamesTeam2 == 0 and PointsTeam1 == 0 and PointsTeam2 == 0:
+                        time.sleep(5)
+                        print('Show sponsors')
+                        socketio.emit('B2F_show_sponsors')
+                        time.sleep(30)
+                        print('Hide sponsors')
+                        socketio.emit('B2F_hide_sponsors')
+                        stateSponsorsSet2 = 1
+                else:
+                    pass
+        
+        time.sleep(1)
+
 def reset():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2
     while True:
@@ -887,6 +876,7 @@ def reset():
             Set = 0
             stateServiceTeam1 = False
             stateServiceTeam2 = False
+            print('Reset')
             
             socketio.emit('B2F_reset')
             socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
@@ -903,10 +893,12 @@ thread1 = threading.Timer(0.1, score)
 thread1.start()
 thread2 = threading.Timer(0.1, reset)
 thread2.start()
+thread3 = threading.Timer(0.1, sponsors)
+thread3.start()
 
-@socketio.on('F2B_mac')
-def mac_address(payload):
-    print(payload['MAC'])
+# @socketio.on('F2B_mac')
+# def mac_address(payload):
+#     print(payload['MAC'])
 
 
 if __name__ == '__main__':
