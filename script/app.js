@@ -3,7 +3,7 @@
 const lanIP = `${window.location.hostname}:5000`;
 const socketio = io(`http://${lanIP}`);
 
-let scoreboardPage, servePage, winnerPage, loaderPage, sponsorPage;
+let scoreboardPage, servePage, winnerPage, loaderPage, sponsorPage, clubPage;
 
 // Html elements
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1;
@@ -25,6 +25,9 @@ var stateConnection = 0;
 // Html elements service
 let serveTeam1, serveTeam2;
 
+// Html elements trophy
+let trophy1win, trophy2win, trophy1lose, trophy2lose
+
 // Html elements winnerpage
 let winnerTeam, winnerTeamBg;
 let pointsWinner1, pointsWinner2;
@@ -36,6 +39,9 @@ var hours = 0, minutes = 0;
 // Timer
 let timerElement;
 var seconds = 31;
+
+// Message element clubpage
+let messageElement
 
 // Form
 let button, macAddress;
@@ -130,26 +136,28 @@ function listenToSocket () {
         // Games van set 3 weergeven indien de match niet beindigd is
         if (sets == 2)   {
             // Match is beindigd
-            winnerPage.style.display = "none";
+            // winnerPage.style.display = "none";
             scoreboardPage.style.display = "block";
             if ((games1Set1 > games2Set1 && games1Set2 > games2Set2) || (games2Set1 > games1Set1 && games2Set2 > games1Set2)) {
                 gamesSet3Team1.style.display  = "none";
                 gamesSet3Team2.style.display  = "none";
-                scoreboardPage.style.display = "none";
-                winnerPage.style.display = "block";
+                // scoreboardPage.style.display = "none";
+                // winnerPage.style.display = "block";
+                serveTeam1.style.display = "none";
+                serveTeam2.style.display = "none";
                 if (games1Set2 > games2Set2) {
-                    gamesSet2Team1.style.color  = "#fec941";
-                    winnerTeam.innerHTML = "Red";
-                    winnerTeamBg.style.backgroundColor = "#fe2d2d"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li class="u-yellow">${games1Set2}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li>${games2Set2}</li></ul>`;
+                    // rood wint
+                    trophy1win.style.display = "block";
+                    trophy2win.style.display = "none";
+                    trophy1lose.style.display = "none";
+                    trophy2lose.style.display = "block";
                 }
                 else {
-                    gamesSet2Team2.style.color  = "#fec941";
-                    winnerTeam.innerHTML = "Blue";
-                    winnerTeamBg.style.backgroundColor = "#2d3cfe";
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li>${games1Set2}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li class="u-yellow">${games2Set1}</li><li class="u-yellow">${games2Set2+1}</li></ul>`;
+                    // blauw wint
+                    trophy1win.style.display = "none";
+                    trophy2win.style.display = "block";
+                    trophy1lose.style.display = "block";
+                    trophy2lose.style.display = "none";
                 }
             }
             // Match is nog niet beindigd
@@ -168,33 +176,21 @@ function listenToSocket () {
         }
 
         if (sets == 3)   {
-            scoreboardPage.style.display = "none";
-            winnerPage.style.display = "block";
+            // scoreboardPage.style.display = "none";
+            // winnerPage.style.display = "block";
+            serveTeam1.style.display = "none";
+            serveTeam2.style.display = "none";
             if (games1Set3 > games2Set3) {
-                gamesSet2Team1.style.color  = "#fec941";
-                winnerTeam.innerHTML = "Red";
-                winnerTeamBg.style.backgroundColor = "#fe2d2d"; // `<h1>${games1Set1}</h1><h1>${games1Set2+1}</h1>`
-                if (games1Set1 > games2Set1) {
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li>${games1Set2}</li><li class="u-yellow">${games1Set3}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li class="u-yellow">${games2Set2}</li><li>${games2Set3}</li></ul>`;
-                }
-                else {
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li class="u-yellow">${games1Set2}</li><li class="u-yellow">${games1Set3}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li class="u-yellow">${games2Set1}</li><li>${games2Set2}</li><li>${games2Set3}</li></ul>`;
-                }
+                trophy1win.style.display = "block";
+                trophy2win.style.display = "none";
+                trophy1lose.style.display = "none";
+                trophy2lose.style.display = "block";
             }
             else {
-                gamesSet2Team2.style.color  = "#fec941";
-                winnerTeam.innerHTML = "Blue";
-                winnerTeamBg.style.backgroundColor = "#2d3cfe";
-                if (games1Set1 > games2Set1) {
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li class="u-yellow">${games1Set1}</li><li>${games1Set2}</li><li>${games1Set3}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li>${games2Set1}</li><li class="u-yellow">${games2Set2}</li><li class="u-yellow">${games2Set3+1}</li></ul>`;
-                }
-                else {
-                    pointsWinner1.innerHTML = `<ul class="c-points"><li>${games1Set1}</li><li class="u-yellow">${games1Set2}</li><li>${games1Set3}</li></ul>`;
-                    pointsWinner2.innerHTML = `<ul class="c-points"><li class="u-yellow">${games2Set1}</li><li>${games2Set2}</li><li class="u-yellow">${games2Set3+1}</li></ul>`;
-                }
+                trophy1win.style.display = "none";
+                trophy2win.style.display = "block";
+                trophy1lose.style.display = "block";
+                trophy2lose.style.display = "none";
             }
         }
 
@@ -298,6 +294,12 @@ function listenToSocket () {
         gamesSet2Team2.style.display = "none";
         gamesSet3Team1.style.display = "none";
         gamesSet3Team2.style.display = "none";
+        trophy1win.style.display = "none"
+        trophy2win.style.display = "none"
+        trophy1lose.style.display = "none"
+        trophy2lose.style.display = "none"
+        serveTeam1.style.display = "block";
+        serveTeam2.style.display = "block";
 
         // serveTeam1.style.visibility = "hidden";
         // serveTeam2.style.visibility = "hidden";
@@ -309,6 +311,11 @@ function listenToSocket () {
         document.body.style.background = "#FEC941"
 
     });
+    socketio.on('B2F_club_message', function (payload) {
+        let message = payload['message'];
+        messageElement.innerHTML = message;
+        console.log(message)
+    })
 }
 
 function listenToUI () {
@@ -338,6 +345,7 @@ function init () {
     winnerPage = document.querySelector('.js-winner-page');
     loaderPage = document.querySelector('.js-loader-page');
     sponsorPage = document.querySelector('.js-sponsor-page');
+    clubPage = document.querySelector('.js-club-page');
 
     pointsTeam1 = document.querySelector('.js-points-1');
     currentGames1 = document.querySelector('.js-games-1');
@@ -354,6 +362,11 @@ function init () {
     serveTeam1 = document.querySelector('.js-serve-1');
     serveTeam2 = document.querySelector('.js-serve-2');
 
+    trophy1win = document.querySelector('.js-trophy-1-win');
+    trophy2win = document.querySelector('.js-trophy-2-win');
+    trophy1lose = document.querySelector('.js-trophy-1-lose');
+    trophy2lose = document.querySelector('.js-trophy-2-lose');
+
     pointsWinner1 = document.querySelector('.js-points--winner-1');
     pointsWinner2 = document.querySelector('.js-points--winner-2');
 
@@ -364,6 +377,8 @@ function init () {
     minutesElement = document.querySelector('.js-minutes');
 
     timerElement = document.querySelector('.js-countdown');
+
+    messageElement = document.querySelector('.js-message');
 
     button = document.querySelector('.js-button-form');
     macAddress = document.querySelector('.js-mac');

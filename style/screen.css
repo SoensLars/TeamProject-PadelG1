@@ -69,6 +69,7 @@ ul {
 }
 
 .o-club-page {
+    display: none;
 }
 
 /*
@@ -203,6 +204,7 @@ ul {
     background-color: var(--global-color-yellow);
     border-radius: 100%;
     visibility: hidden;
+    display: block;
 }
 
 .c-serve-2 {
@@ -211,6 +213,7 @@ ul {
     background-color: var(--global-color-yellow);
     border-radius: 100%;
     visibility: hidden;
+    display: block;
 }
 
 .c-team-serve {
@@ -394,6 +397,26 @@ ul {
 .c-input:focus,
 input:focus {
     outline: none;
+}
+
+.c-trophy-1-win {
+    display: none;
+    height: 8rem;
+}
+
+.c-trophy-2-win {
+    display: none;
+    height: 8rem;
+}
+
+.c-trophy-1-lose {
+    display: none;
+    height: 8rem;
+}
+
+.c-trophy-2-lose {
+    display: none;
+    height: 8rem;
 }
 
 /* sponsor page*/
