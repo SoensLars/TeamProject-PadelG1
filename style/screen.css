@@ -61,7 +61,7 @@ ul {
 }
 
 .o-loader-page {
-    display: block;
+    display: none;
 }
 
 .o-sponsor-page {
@@ -69,7 +69,7 @@ ul {
 }
 
 .o-club-page {
-    display: none;
+    display: block;
 }
 
 /*
@@ -460,9 +460,15 @@ input:focus {
 
 /* club page*/
 
-.c-clublogo-bg{
-    width: 35rem;
-    height: 20rem;
+.c-club {
+    display: grid;
+    grid-template-columns: 32rem 20rem 20rem;
+    grid-template-rows: 15rem 15rem 15rem;
+}
+
+.c-club-sponsor-bg {
+    height: 13rem;
+    width: 18rem;
     background-color: var(--global-color-white);
     display: flex;
     justify-content: center;
@@ -470,21 +476,47 @@ input:focus {
     border-radius: 1rem;
     box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
     margin: auto;
-    margin-bottom: 4rem;
 }
 
-.c-clublogo{
+.c-clublogo-bg {
+    width: 30rem;
+    height: 28rem;
+    background-color: var(--global-color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
+    margin: auto;
+    grid-row: span 2;
+}
+
+.c-club-sponsor {
+    width: 16rem;
+    height: 11rem;
+    object-fit: contain;
+}
+
+.c-clublogo {
     width: 33rem;
     height: 18rem;
     object-fit: contain;
 }
 
-.o-club-page span{
-    font-size: 5rem;
-    font-weight: bold;
-    width: 82rem;
-    display: block;
-    text-align: center;
+.c-reset-bg {
+    grid-column: span 2;
+    background-color: var(--global-color-black);
+    height: 13rem;
+    width: 50rem;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-
+.c-reset-bg span{
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--global-color-white);
+}
