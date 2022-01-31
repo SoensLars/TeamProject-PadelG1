@@ -148,12 +148,6 @@ def esp_connection(sock):
     socketio.emit('B2F_esp_connection')
 #endregion
 
-# Textfiles
-def read_file():
-    with open('/home/lars/Project/files/club.txt') as f:
-        clubMessage = f.read()
-        return clubMessage
-
 # Sound
 def play_sound_up():
     pygame.mixer.music.load("/home/lars/Project/sounds/beep_up.mp3")
@@ -1024,7 +1018,6 @@ def reset():
             socketio.emit('B2F_reset')
             socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
             socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
-            socketio.emit('B2F_club_message', {'message': read_file()})
         
         if GPIO.input(knopPower) == 0:
             print("Shut down")
@@ -1065,9 +1058,6 @@ thread3.start()
 thread4 = threading.Timer(0.1, timer_club)
 thread4.start()
 
-# @socketio.on('F2B_mac')
-# def mac_address(payload):
-#     print(payload['MAC'])
 
 if __name__ == '__main__':
     socketio.run(app, debug=False, host='0.0.0.0')
