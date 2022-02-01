@@ -3,7 +3,7 @@
 const lanIP = `${window.location.hostname}:5000`;
 const socketio = io(`http://${lanIP}`);
 
-let scoreboardPage, servePage, winnerPage, loaderPage, sponsorPage, clubPage;
+let scoreboardPage, servePage, loaderPage, sponsorPage, clubPage;
 
 // Html elements
 var pointsTeam1, currentGames1, gamesSet1Team1, gamesSet2Team1, gamesSet3Team1, setsTeam1;
@@ -31,10 +31,6 @@ let serveTeam1, serveTeam2;
 // Html elements trophy
 let trophy1win, trophy2win, trophy1lose, trophy2lose
 
-// Html elements winnerpage
-let winnerTeam, winnerTeamBg;
-let pointsWinner1, pointsWinner2;
-
 // Clock
 let hoursElement, minutesElement;
 var hours = 0, minutes = 0;
@@ -42,13 +38,6 @@ var hours = 0, minutes = 0;
 // Timer
 let timerElement;
 var seconds = 31;
-
-// Message element clubpage
-let messageElement
-
-// Form
-let button, macAddress;
-var macAddressValue;
 
 function listenToSocket () {
     socketio.on('B2F_esp_no_connection', function () {
@@ -74,7 +63,7 @@ function listenToSocket () {
             loaderPage.style.display = "none";
             servePage.style.display = "block";
             document.body.style.background = "#FEC941";
-            console.log("Connected, er moet nog een eerste punt gespeeld worden")
+            console.log("Connected, er moet nog een eerste punt gespeeld worden");
         }
         else {
             if (stateMatch == false) {
@@ -82,8 +71,8 @@ function listenToSocket () {
                 servePage.style.display = "none";
                 scoreboardPage.style.display = "block";
                 clubPage.style.display = "none";
-                document.body.style.background = "#5EAFE7"
-                console.log("Connected, wedstrijd kan verder gespeeld worden")
+                document.body.style.background = "#5EAFE7";
+                console.log("Connected, wedstrijd kan verder gespeeld worden");
             }
             else {
                 loaderPage.style.display = "none";
@@ -91,30 +80,29 @@ function listenToSocket () {
                 scoreboardPage.style.display = "none";
                 clubPage.style.display = "block";
                 document.body.style.background = "#FEC941";
-                console.log("Connected, clubpage wordt getoond")
+                console.log("Connected, clubpage wordt getoond");
             }
         }       
-    })
+    });
     socketio.on('B2F_serve', function (payload) {
         serviceStart = true;
         servePage.style.display = "none";
         scoreboardPage.style.display = "block";
-        document.body.style.background = "#5EAFE7"
-        //laad scoreboard pagina
+        document.body.style.background = "#5EAFE7";
+        // laad scoreboard pagina
         if (payload == true) {
             console.log("team rood mag beginnen met serveren.");
             serveTeam1.style.visibility = "visible";
             serveTeam2.style.visibility = "hidden";
-            //padelbal in scoreboard aanpassen naar rode team
+            // padelbal in scoreboard aanpassen naar rode team
         }
         else if (payload == false) {
             console.log("team blauw mag beginnen met serveren.");
             serveTeam1.style.visibility = "hidden";
             serveTeam2.style.visibility = "visible";
-            //padelbal in scoreboard aanpassen naar blauwe team
+            // padelbal in scoreboard aanpassen naar blauwe team
         }
-        // Match begint hier, dus timer mag gestart worden
-    })
+    });
     socketio.on('B2F_points_team1', function (payload) {
         // Punten in scoreboard weergeven
         points1 = payload['points'];
@@ -124,7 +112,6 @@ function listenToSocket () {
         games1Set3 = payload['gamesSet3'];
         sets = payload['sets'];
         stateService = payload['stateService'];
-        console.log(`State service is ${stateService}`);
         pointsTeam1.innerHTML = points1;
         gamesSet1Team1.innerHTML = games1Set1;
         gamesSet2Team1.innerHTML = games1Set2;
@@ -132,6 +119,8 @@ function listenToSocket () {
 
         // Games van set 2 weergeven
         if (sets == 0)   {
+            stateMatch = false;
+
             gamesSet2Team1.style.display  = "none";
             gamesSet2Team2.style.display  = "none";
             gamesSet1Team1.style.color  = "#FFFFFF";
@@ -139,8 +128,9 @@ function listenToSocket () {
         } 
 
         if (sets == 1)   {
-            winnerPage.style.display = "none";
+            stateMatch = false;
             scoreboardPage.style.display = "block";
+
             gamesSet2Team1.style.display  = "block";
             gamesSet2Team2.style.display  = "block";
             gamesSet3Team1.style.display  = "none";
@@ -157,14 +147,12 @@ function listenToSocket () {
 
         // Games van set 3 weergeven indien de match niet beindigd is
         if (sets == 2)   {
-            // Match is beindigd
-            // winnerPage.style.display = "none";
             scoreboardPage.style.display = "block";
+            // Match is beindigd
             if ((games1Set1 > games2Set1 && games1Set2 > games2Set2) || (games2Set1 > games1Set1 && games2Set2 > games1Set2)) {
+                stateMatch = true;
                 gamesSet3Team1.style.display  = "none";
                 gamesSet3Team2.style.display  = "none";
-                // scoreboardPage.style.display = "none";
-                // winnerPage.style.display = "block";
                 serveTeam1.style.display = "none";
                 serveTeam2.style.display = "none";
                 if (games1Set2 > games2Set2) {
@@ -186,6 +174,7 @@ function listenToSocket () {
             }
             // Match is nog niet beindigd
             else {
+                stateMatch = false;
                 gamesSet3Team1.style.display  = "block";
                 gamesSet3Team2.style.display  = "block";
                 gamesSet3Team1.style.color  = "#FFFFFF";
@@ -200,8 +189,7 @@ function listenToSocket () {
         }
 
         if (sets == 3)   {
-            // scoreboardPage.style.display = "none";
-            // winnerPage.style.display = "block";
+            stateMatch = true;
             serveTeam1.style.display = "none";
             serveTeam2.style.display = "none";
             if (games1Set3 > games2Set3) {
@@ -221,12 +209,38 @@ function listenToSocket () {
         }
 
         if (stateService == true) {
-            serveTeam1.style.visibility = "visible";
-            serveTeam2.style.visibility = "hidden";
+            if (stateMatch != true) {
+                trophy1win.style.display = "none";
+                trophy2win.style.display = "none";
+                trophy1lose.style.display = "none";
+                trophy2lose.style.display = "none";
+
+                serveTeam1.style.display = "block";
+                serveTeam2.style.display = "block";
+                serveTeam1.style.visibility = "visible";
+                serveTeam2.style.visibility = "hidden";
+            }
+            else {
+                serveTeam1.style.display = "none";
+                serveTeam2.style.display = "none";
+            }
         }
         else {
-            serveTeam1.style.visibility = "hidden";
-            serveTeam2.style.visibility = "visible";
+            if (stateMatch != true) {
+                trophy1win.style.display = "none";
+                trophy2win.style.display = "none";
+                trophy1lose.style.display = "none";
+                trophy2lose.style.display = "none";
+
+                serveTeam1.style.display = "block";
+                serveTeam2.style.display = "block";
+                serveTeam1.style.visibility = "hidden";
+                serveTeam2.style.visibility = "visible";
+            }
+            else {
+                serveTeam1.style.display = "none";
+                serveTeam2.style.display = "none";
+            }
         }
     });
     socketio.on('B2F_points_team2', function (payload) {
@@ -235,7 +249,7 @@ function listenToSocket () {
         games2Set1 = payload['gamesSet1'];
         games2Set2 = payload['gamesSet2'];
         games2Set3 = payload['gamesSet3'];
-        sets = payload['sets']
+        sets = payload['sets'];
         stateService = payload['stateService'];
         pointsTeam2.innerHTML = points2;
         gamesSet1Team2.innerHTML = games2Set1;
@@ -243,7 +257,10 @@ function listenToSocket () {
         gamesSet3Team2.innerHTML = games2Set3;
 
 
+        // Games van set 2 weergeven
         if (sets == 0)   {
+            stateMatch = false;
+
             gamesSet2Team1.style.display  = "none";
             gamesSet2Team2.style.display  = "none";
             gamesSet1Team1.style.color  = "#FFFFFF";
@@ -251,8 +268,9 @@ function listenToSocket () {
         } 
 
         if (sets == 1)   {
-            winnerPage.style.display = "none";
+            stateMatch = false;
             scoreboardPage.style.display = "block";
+
             gamesSet2Team1.style.display  = "block";
             gamesSet2Team2.style.display  = "block";
             gamesSet3Team1.style.display  = "none";
@@ -269,14 +287,12 @@ function listenToSocket () {
 
         // Games van set 3 weergeven indien de match niet beindigd is
         if (sets == 2)   {
-            // Match is beindigd
-            // winnerPage.style.display = "none";
             scoreboardPage.style.display = "block";
+            // Match is beindigd
             if ((games1Set1 > games2Set1 && games1Set2 > games2Set2) || (games2Set1 > games1Set1 && games2Set2 > games1Set2)) {
+                stateMatch = true;
                 gamesSet3Team1.style.display  = "none";
                 gamesSet3Team2.style.display  = "none";
-                // scoreboardPage.style.display = "none";
-                // winnerPage.style.display = "block";
                 serveTeam1.style.display = "none";
                 serveTeam2.style.display = "none";
                 if (games1Set2 > games2Set2) {
@@ -285,6 +301,7 @@ function listenToSocket () {
                     trophy2win.style.display = "none";
                     trophy1lose.style.display = "none";
                     trophy2lose.style.display = "block";
+                    gamesSet2Team1.style.color  = "#fec941";
                 }
                 else {
                     // blauw wint
@@ -292,10 +309,12 @@ function listenToSocket () {
                     trophy2win.style.display = "block";
                     trophy1lose.style.display = "block";
                     trophy2lose.style.display = "none";
+                    gamesSet2Team2.style.color  = "#fec941";
                 }
             }
             // Match is nog niet beindigd
             else {
+                stateMatch = false;
                 gamesSet3Team1.style.display  = "block";
                 gamesSet3Team2.style.display  = "block";
                 gamesSet3Team1.style.color  = "#FFFFFF";
@@ -310,8 +329,7 @@ function listenToSocket () {
         }
 
         if (sets == 3)   {
-            // scoreboardPage.style.display = "none";
-            // winnerPage.style.display = "block";
+            stateMatch = true;
             serveTeam1.style.display = "none";
             serveTeam2.style.display = "none";
             if (games1Set3 > games2Set3) {
@@ -319,34 +337,64 @@ function listenToSocket () {
                 trophy2win.style.display = "none";
                 trophy1lose.style.display = "none";
                 trophy2lose.style.display = "block";
+                gamesSet3Team1.style.color  = "#fec941";
             }
             else {
                 trophy1win.style.display = "none";
                 trophy2win.style.display = "block";
                 trophy1lose.style.display = "block";
                 trophy2lose.style.display = "none";
+                gamesSet3Team2.style.color  = "#fec941";
             }
         }
 
         if (stateService == true) {
-            serveTeam1.style.visibility = "visible";
-            serveTeam2.style.visibility = "hidden";
+            if (stateMatch != true) {
+                trophy1win.style.display = "none";
+                trophy2win.style.display = "none";
+                trophy1lose.style.display = "none";
+                trophy2lose.style.display = "none";
+
+                serveTeam1.style.display = "block";
+                serveTeam2.style.display = "block";
+                serveTeam1.style.visibility = "visible";
+                serveTeam2.style.visibility = "hidden";
+            }
+            else {
+                serveTeam1.style.display = "none";
+                serveTeam2.style.display = "none";
+            }
         }
         else {
-            serveTeam1.style.visibility = "hidden";
-            serveTeam2.style.visibility = "visible";
+            if (stateMatch != true) {
+                trophy1win.style.display = "none";
+                trophy2win.style.display = "none";
+                trophy1lose.style.display = "none";
+                trophy2lose.style.display = "none";
+
+                serveTeam1.style.display = "block";
+                serveTeam2.style.display = "block";
+                serveTeam1.style.visibility = "hidden";
+                serveTeam2.style.visibility = "visible";
+            }
+            else {
+                serveTeam1.style.display = "none";
+                serveTeam2.style.display = "none";
+            }
         }
     });
     socketio.on('B2F_show_sponsors', function () {
-        seconds = 31
-        document.body.style.background = "#fec941";
-        scoreboardPage.style.display = "none";
-        sponsorPage.style.display = "block";
+        setTimeout(() => { 
+            seconds = 31
+            document.body.style.background = "#fec941";
+            scoreboardPage.style.display = "none";
+            sponsorPage.style.display = "block";         
+        }, 5000);
     });
     socketio.on('B2F_hide_sponsors', function () {
         document.body.style.background = "#5eafe7";
         scoreboardPage.style.display = "block";
-        sponsorPage.style.display = "none"
+        sponsorPage.style.display = "none";
     });
     socketio.on('B2F_reset', function () {
         gamesSet1Team1.style.color  = "#FFFFFF";
@@ -374,41 +422,29 @@ function listenToSocket () {
             scoreboardPage.style.display = "none";
             loaderPage.style.display = "none";
             clubPage.style.display = "none";
+            sponsorPage.style.display = "none";
             servePage.style.display = "block";
 
-            document.body.style.background = "#FEC941"
+            document.body.style.background = "#FEC941";
         }
         else {
             scoreboardPage.style.display = "none";
             loaderPage.style.display = "block";
             clubPage.style.display = "none";
+            sponsorPage.style.display = "none";
             servePage.style.display = "none";
 
-            document.body.style.background = "#5EAFE7"
+            document.body.style.background = "#5EAFE7";
         }
-
     });
     socketio.on('B2F_club_page', function () {
         scoreboardPage.style.display = "none";
         winnerPage.style.display = "none";
         clubPage.style.display = "block";
+        sponsorPage.style.display = "none";
         servePage.style.display = "none";
-        stateMatch = true;
 
         document.body.style.background = "#FEC941"
-    })
-    socketio.on('B2F_club_message', function (payload) {
-        let message = payload['message'];
-        messageElement.innerHTML = message;
-        console.log(message)
-    })
-}
-
-function listenToUI () {
-    button.addEventListener('click', function () {
-        macAddressValue = macAddress.value;
-        console.log(macAddressValue);
-        socketio.emit('F2B_mac', {'MAC': macAddressValue})
     });
 }
 
@@ -425,29 +461,13 @@ function countdownFunction () {
     timerElement.innerHTML = seconds;
 }
 
-// function checkConnectionStart() {
-//     if (stateConnection == true) {
-//         scoreboardPage.style.display = "none";
-//         loaderPage.style.display = "none";
-//         clubPage.style.display = "none";
-//         servePage.style.display = "block";
-
-//         document.body.style.background = "#FEC941"
-//     }
-//     else {
-//         scoreboardPage.style.display = "none";
-//         loaderPage.style.display = "block";
-//         clubPage.style.display = "none";
-//         servePage.style.display = "none";
-
-//         document.body.style.background = "#5EAFE7"
-//     }
-// }
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function init () {
     scoreboardPage = document.querySelector('.js-scoreboard-page');
     servePage = document.querySelector('.js-serve-page');
-    winnerPage = document.querySelector('.js-winner-page');
     loaderPage = document.querySelector('.js-loader-page');
     sponsorPage = document.querySelector('.js-sponsor-page');
     clubPage = document.querySelector('.js-club-page');
@@ -472,26 +492,14 @@ function init () {
     trophy1lose = document.querySelector('.js-trophy-1-lose');
     trophy2lose = document.querySelector('.js-trophy-2-lose');
 
-    pointsWinner1 = document.querySelector('.js-points--winner-1');
-    pointsWinner2 = document.querySelector('.js-points--winner-2');
-
-    winnerTeam = document.querySelector('.js-winner-team');
-    winnerTeamBg = document.querySelector('.js-winner-bg');
-
     hoursElement = document.querySelector('.js-hours');
     minutesElement = document.querySelector('.js-minutes');
 
     timerElement = document.querySelector('.js-countdown');
 
-    messageElement = document.querySelector('.js-message');
-
-    button = document.querySelector('.js-button-form');
-    macAddress = document.querySelector('.js-mac');
-
     listenToSocket();
     setInterval(timerFunction, 1000); 
-    setInterval(countdownFunction, 1000);
-     
+    setInterval(countdownFunction, 1000);     
 }
 
 document.addEventListener('DOMContentLoaded', function () {

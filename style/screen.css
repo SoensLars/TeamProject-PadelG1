@@ -61,7 +61,7 @@ ul {
 }
 
 .o-loader-page {
-    display: none;
+    display: block;
 }
 
 .o-sponsor-page {
@@ -69,7 +69,7 @@ ul {
 }
 
 .o-club-page {
-    display: block;
+    display: none;
 }
 
 /*

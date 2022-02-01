@@ -426,9 +426,9 @@ def points_team1_up():
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3,'points': PointsTeam1, 'stateService': stateServiceSide})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
-    # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
     print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
+    print(f"") 
 
 def points_team2_up():
     global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceSide, serviceStart, lastScored, prevPoint, prevPoint1, prevPoint2, prevServe
@@ -696,14 +696,13 @@ def points_team2_up():
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3, 'points': PointsTeam1, 'stateService': stateServiceSide})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
-    # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
     print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
     print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
 
 def points_down():
-    global PointsTeam1, PointsTeam2, Set, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam2Set1, GamesTeam1Set2, GamesTeam2Set2, GamesTeam1Set3, GamesTeam2Set3, stateServiceSide, prevServe
+    global PointsTeam1, PointsTeam2, Set, prevPoint, prevPoint1, prevPoint2, lastScored, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam2Set1, GamesTeam1Set2, GamesTeam2Set2, GamesTeam1Set3, GamesTeam2Set3, stateServiceSide, prevServe, winState
     if lastScored == "red":
         if Set == 0:
             if PointsTeam1 == 0 and PointsTeam2 == 0:
@@ -723,7 +722,6 @@ def points_down():
                 if GamesTeam1 == 0 and GamesTeam2 == 0:
                     Set = 0
                     GamesTeam1Set1 -= 1
-                    # GamesTeam1 -= 1
                     GamesTeam1 = GamesTeam1Set1
                     GamesTeam2 = GamesTeam2Set1
                     PointsTeam1 = prevPoint1
@@ -743,7 +741,6 @@ def points_down():
                 if GamesTeam1 == 0 and GamesTeam2 == 0:
                     Set = 1
                     GamesTeam1Set2 -= 1
-                    # GamesTeam2 -= 1
                     GamesTeam1 = GamesTeam1Set2
                     GamesTeam2 = GamesTeam2Set2
                     PointsTeam1 = prevPoint1
@@ -763,7 +760,6 @@ def points_down():
                 if GamesTeam1 == 0 and GamesTeam2 == 0:
                     Set = 2
                     GamesTeam1Set3 -= 1
-                    # GamesTeam1 -= 1
                     GamesTeam1 = GamesTeam1Set3
                     GamesTeam2 = GamesTeam2Set3
                     PointsTeam1 = prevPoint1
@@ -788,7 +784,6 @@ def points_down():
                 if GamesTeam1 == 0 and GamesTeam2 == 0:
                     Set = 0
                     GamesTeam2Set1 -= 1
-                    # GamesTeam2 -= 1
                     GamesTeam1 = GamesTeam1Set1
                     GamesTeam2 = GamesTeam2Set1
                     PointsTeam1 = prevPoint1
@@ -808,12 +803,12 @@ def points_down():
                 if GamesTeam1 == 0 and GamesTeam2 == 0:
                     Set = 1
                     GamesTeam2Set2 -= 1
-                    # GamesTeam2 -= 1
                     GamesTeam1 = GamesTeam1Set2
                     GamesTeam2 = GamesTeam2Set2
                     PointsTeam1 = prevPoint1
                     PointsTeam2 = prevPoint2
                     stateServiceSide = prevServe # niet helemaal zeker
+                    winState = False
                 else:
                     GamesTeam2Set3 -= 1
                     GamesTeam2 -= 1
@@ -825,19 +820,18 @@ def points_down():
                 if GamesTeam1 == 0 and GamesTeam2 == 0:
                     Set = 2
                     GamesTeam2Set3 -= 1
-                    # GamesTeam2 -= 1
                     GamesTeam1 = GamesTeam1Set3
                     GamesTeam2 = GamesTeam2Set3
                     PointsTeam1 = prevPoint1
                     PointsTeam2 = prevPoint2
                     stateServiceSide = prevServe # niet helemaal zeker
+                    winState = False
 
 
     socketio.emit('B2F_points_team1', {'sets': Set, 'currentGames': GamesTeam1, 'gamesSet1': GamesTeam1Set1, 'gamesSet2': GamesTeam1Set2, 'gamesSet3': GamesTeam1Set3 ,'points': PointsTeam1, 'stateService': stateServiceSide})    
     socketio.emit('B2F_points_team2', {'sets': Set, 'currentGames': GamesTeam2, 'gamesSet1': GamesTeam2Set1, 'gamesSet2': GamesTeam2Set2, 'gamesSet3': GamesTeam2Set3, 'points': PointsTeam2, 'stateService': stateServiceSide})
-    # print(f"'sets': {SetsTeam1}, 'currentGames': {GamesTeam1}, 'gamesSet1': {GamesTeam1Set1}, 'gamesSet2': {GamesTeam1Set2}, 'gamesSet3': {GamesTeam1Set3} ,'points': {PointsTeam1}")
-    # print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
-    # print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
+    print(f"Team1\t\tSets: {Set}\t\tGames: {GamesTeam1}\tPoints: {PointsTeam1}")
+    print(f"Team2\t\tSets: {Set}\t\tGames: {GamesTeam2}\tPoints: {PointsTeam2}")  
     print(f"") 
 
 def send_points_to_frontend(message):
@@ -860,20 +854,15 @@ def send_points_to_frontend(message):
                     # Controleren of er een eventuele derde set moet worden gespeeld
                     if (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2) or (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2):
                         print("Spel gedaan")
-                        # winState = True
-                        # timerClubStart = time.time()
                     else:
                         points_team1_up()
                         play_sound_up()
                 elif Set == 3:
                     print("Spel gedaan")
-                    # winState = True
-                    # timerClubStart = time.time()
                 else:
                     points_team1_up()
                     play_sound_up()
 
-        # elif GPIO.input(knop2up) == 0:
         elif message == b'teamBlauwUp':
             # Als state False is --> Bepalen wie mag serveren, Als state True is --> Punten gaan bijtellen
             if stateServiceTeam2 == False:
@@ -888,28 +877,20 @@ def send_points_to_frontend(message):
                     # Controleren of er een eventuele derde set moet worden gespeeld
                     if (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2) or (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2):
                         print("Spel gedaan")
-                        # winState = True
-                        # timerClubStart = time.time()
                     else:
                         points_team2_up()
                         play_sound_up()
                 elif Set == 3:
                     print("Spel gedaan")
-                    # winState = True
-                    # timerClubStart = time.time()
                 else:
                     points_team2_up()
                     play_sound_up()
 
-        # elif GPIO.input(knop1down) == 0:
         elif message == b'teamRoodDown':
-            # points_team1_down()
             points_down()
             play_sound_down()
 
-        # elif GPIO.input(knop2down) == 0:
         elif message == b'teamBlauwDown':
-            # points_team2_down()
             points_down()
             play_sound_down()
 
@@ -952,51 +933,52 @@ def score():
         time.sleep(0.1)
 
 def sponsors():
-    global GamesTeam1, GamesTeam2, PointsTeam1, PointsTeam2, Set, stateSponsorsSet1, stateSponsorsSet2, sponsorState
+    global GamesTeam1, GamesTeam2, PointsTeam1, PointsTeam2, Set, stateSponsorsSet1, stateSponsorsSet2, sponsorState, winState
     while True:
         if Set == 0:
-            pass
+            pass  
         elif Set == 1:
-            time.sleep(5)
+            if (PointsTeam1 > 0 or PointsTeam2 > 0) or (GamesTeam1 > 0 or GamesTeam2 > 0):
+                stateSponsorsSet1 = 1
             if stateSponsorsSet1 == 0:
-                if GamesTeam1 == 0 and GamesTeam2 == 0 and PointsTeam1 == 0 and PointsTeam2 == 0:
-                    print('Show sponsors')
-                    socketio.emit('B2F_show_sponsors')
-                    sponsorState = True
-                    time.sleep(30)
-                    print('Hide sponsors')
-                    socketio.emit('B2F_hide_sponsors')
-                    sponsorState = False
-                    stateSponsorsSet1 = 1
-                else:
-                    pass
+                print('Show sponsors')
+                socketio.emit('B2F_show_sponsors')
+                sponsorState = True
+                time.sleep(35)
+                print('Hide sponsors')
+                socketio.emit('B2F_hide_sponsors')
+                sponsorState = False
+                stateSponsorsSet1 = 1
             else:
                 pass
         elif Set == 2:
-            if (GamesTeam1Set1 > GamesTeam2Set1 and GamesTeam1Set2 > GamesTeam2Set2) or (GamesTeam2Set1 > GamesTeam1Set1 and GamesTeam2Set2 > GamesTeam1Set2):
-                pass
-            else:
-                time.sleep(5)
+            if (PointsTeam1 > 0 or PointsTeam2 > 0) or (GamesTeam1 > 0 or GamesTeam2 > 0):
+                stateSponsorsSet2 = 1
+            if winState == False:
                 if stateSponsorsSet2 == 0:
-                    if GamesTeam1 == 0 and GamesTeam2 == 0 and PointsTeam1 == 0 and PointsTeam2 == 0:
-                        print('Show sponsors')
-                        socketio.emit('B2F_show_sponsors')
-                        sponsorState = True
-                        time.sleep(30)
-                        print('Hide sponsors')
-                        socketio.emit('B2F_hide_sponsors')
-                        sponsorState = False
-                        stateSponsorsSet2 = 1
+                    print('Show sponsors')
+                    socketio.emit('B2F_show_sponsors')
+                    sponsorState = True
+                    time.sleep(35)
+                    print('Hide sponsors')
+                    socketio.emit('B2F_hide_sponsors')
+                    sponsorState = False
+                    stateSponsorsSet2 = 1
                 else:
                     pass
+            else:
+                pass
+        elif Set == 3:
+            pass
         
-        time.sleep(1)
+        time.sleep(0.1)
 
 def reset():
-    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, resetState, stateSponsorsSet1, stateSponsorsSet2
+    global PointsTeam1, PointsTeam2, GamesTeam1, GamesTeam2, GamesTeam1Set1, GamesTeam1Set2, GamesTeam1Set3, GamesTeam2Set1, GamesTeam2Set2, GamesTeam2Set3, Set, stateServiceTeam1, stateServiceTeam2, resetState, stateSponsorsSet1, stateSponsorsSet2, winState
     while True:
         if GPIO.input(knopReset) == 0:
-            # print("Reset")
+            stateServiceTeam1 = False
+            stateServiceTeam2 = False
             PointsTeam1 = 0
             PointsTeam2 = 0
             GamesTeam1 = 0
@@ -1007,12 +989,11 @@ def reset():
             GamesTeam2Set1 = 0
             GamesTeam2Set2 = 0
             GamesTeam2Set3 = 0
-            Set = 0
+            Set = 0  
             stateSponsorsSet1 = 0
-            stateSponsorsSet2 = 0
-            stateServiceTeam1 = False
-            stateServiceTeam2 = False
+            stateSponsorsSet2 = 0          
             resetState = True
+            winState = False
             print('Reset')
             
             socketio.emit('B2F_reset')
@@ -1031,17 +1012,25 @@ def timer_club():
         if winState == True and resetState == False:
             timerClubCurrent = time.time()
             timerClub = timerClubCurrent - timerClubStart
-            print(timerClub)
-            if timerClub > 10:
+            if timerClub > 60 and winState == True:
                 if timerState == False:
                     print("Show clubpage")
                     socketio.emit('B2F_club_page')
                     timerState = True
                 else: 
                     pass
+            elif timerClub > 60 and winState == False:
+                pass
+
+        elif winState == False and resetState == False:
+            pass
 
         elif winState == True and resetState == True:
-            # print("New Game")
+            winState = False
+            resetState = False
+            timerState = False
+
+        elif winState == False and resetState == True:
             winState = False
             resetState = False
             timerState = False
@@ -1057,7 +1046,6 @@ thread3 = threading.Timer(0.1, sponsors)
 thread3.start()
 thread4 = threading.Timer(0.1, timer_club)
 thread4.start()
-
 
 if __name__ == '__main__':
     socketio.run(app, debug=False, host='0.0.0.0')
