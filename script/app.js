@@ -439,7 +439,6 @@ function listenToSocket () {
     });
     socketio.on('B2F_club_page', function () {
         scoreboardPage.style.display = "none";
-        winnerPage.style.display = "none";
         clubPage.style.display = "block";
         sponsorPage.style.display = "none";
         servePage.style.display = "none";
