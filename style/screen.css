@@ -1,0 +1,522 @@
+:root {
+    --global-color-white: #ffffff;
+    --global-color-black: #000000;
+    --global-color-blue: #5eafe7;
+    --global-color-yellow: #fec941;
+    --global-color-red: #de2935;
+}
+
+html {
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--global-color-black);
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--global-color-blue);
+    margin: 0;
+}
+
+h1 {
+    font-size: 3rem;
+    margin: 0;
+}
+
+img {
+    height: 50px;
+}
+
+li {
+    list-style-type: none;
+}
+
+ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+/*
+    ### Objects
+*/
+
+/*
+    Pages
+*/
+
+.o-scoreboard-page {
+    display: none;
+}
+
+.o-serve-page {
+    display: none;
+}
+
+.o-winner-page {
+    display: none;
+}
+
+.o-loader-page {
+    display: block;
+}
+
+.o-sponsor-page {
+    display: none;
+}
+
+.o-club-page {
+    display: none;
+}
+
+/*
+    Sets
+    ---
+    Display if the set needs to be played or not
+*/
+
+.o-set1-1 {
+    display: block;
+    color: var(--global-color-white);
+}
+
+.o-set1-2 {
+    display: block;
+    color: var(--global-color-white);
+}
+
+.o-set2-1 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+.o-set2-2 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+.o-set3-2 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+.o-set3-1 {
+    display: none;
+    color: var(--global-color-white);
+}
+
+/*
+    ### Components
+*/
+
+/*
+    Scoreboard
+*/
+
+.c-scoreboard {
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.c-color-score {
+    display: flex;
+    height: 14rem;
+    justify-content: center;
+}
+
+.c-team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--global-color-green);
+    margin: 2rem auto;
+    width: 71rem;
+}
+
+.c-team--red {
+    position: absolute;
+    bottom: 0;
+}
+
+.c-team h1 {
+    font-size: 6rem;
+    color: var(--global-color-white);
+}
+
+.c-team-bg {
+    height: 49%;
+}
+
+.c-team-bg--red {
+    background-color: var(--global-color-red);
+    border-bottom: 10px solid black;
+    position: relative;
+}
+
+.c-team-bg--blue {
+    background-color: var(--global-color-blue);
+}
+
+.c-timer {
+    font-size: 4rem;
+    font-weight: bold;
+    right: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 4rem;
+    color: var(--global-color-white);
+}
+
+.c-points {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    list-style-type: none;
+}
+
+.c-points li {
+    font-size: 6rem;
+    font-weight: bold;
+}
+
+.c-points-bg {
+    display: flex;
+    /* padding: 0 1rem; */
+    height: 10rem;
+    width: 10rem;
+    background-color: var(--global-color-yellow);
+    color: var(--global-color-blue);
+    align-items: center;
+    justify-content: center;
+}
+
+.c-points-bg span {
+    color: var(--global-color-black);
+}
+
+.c-serve-1 {
+    height: 4rem;
+    width: 4rem;
+    background-color: var(--global-color-yellow);
+    border-radius: 100%;
+    visibility: hidden;
+    display: block;
+}
+
+.c-serve-2 {
+    height: 4rem;
+    width: 4rem;
+    background-color: var(--global-color-yellow);
+    border-radius: 100%;
+    visibility: hidden;
+    display: block;
+}
+
+.c-team-serve {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+/*
+    Loadingpage
+*/
+
+.c-loading {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.c-loading h1 {
+    font-size: 6rem;
+    margin-bottom: 4rem;
+}
+
+.c-device {
+    height: 16rem;
+    width: 56rem;
+}
+
+.c-serve {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 6rem;
+}
+
+.c-serve h1 {
+    font-size: 6rem;
+    width: 59rem;
+}
+
+.c-teambtn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 46rem;
+    margin: auto;
+}
+
+.c-teambtn p {
+    font-size: 5rem;
+    font-weight: bold;
+}
+
+.c-teambtn-svg {
+    width: 13rem;
+    height: 13rem;
+}
+
+.c-winner--title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 75rem;
+    height: 13rem;
+    background-color: var(--global-color-team-blue);
+    border-radius: 3rem;
+    border: 0.5rem solid var(--global-color-white);
+    margin-bottom: 4rem;
+}
+
+.c-winner--title h1 {
+    font-size: 5rem;
+}
+
+.c-overview {
+    display: flex;
+    width: 76rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.c-logo--bg {
+    width: 22rem;
+    height: 22rem;
+    background-color: var(--global-color-white);
+    border-radius: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.c-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3rem;
+    width: 17rem;
+    height: 17rem;
+    background-color: var(--global-color-white);
+}
+
+.c-logo img {
+    height: 15rem;
+}
+
+.c-points--winner {
+    display: flex;
+    flex-direction: column;
+    margin: 0 3rem;
+    gap: 3rem;
+}
+
+.c-points--winner .c-points {
+    gap: 7rem;
+}
+
+/*
+    Form
+    ---
+    Form to validate mac-address
+*/
+
+.c-form {
+    border: 0.5rem solid white;
+    border-radius: 3rem;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.c-form button {
+    background-color: var(--global-color-green);
+    color: white;
+    border: none;
+    font-size: 3rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    height: 5rem;
+    border-radius: 1rem;
+}
+
+.c-form button:hover {
+    cursor: pointer;
+}
+
+.c-form button:focus {
+    outline: none;
+}
+
+.c-label {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.c-settings h1 {
+    color: var(--global-color-yellow);
+    font-size: 6rem;
+    margin-bottom: 4rem;
+}
+
+.c-input {
+    text-align: center;
+    height: 5rem;
+    border-radius: 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--global-color-blue);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+}
+
+.c-input::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--global-color-blue);
+    opacity: 1; /* Firefox */
+}
+
+.c-input:focus,
+input:focus {
+    outline: none;
+}
+
+.c-trophy-1-win {
+    display: none;
+    height: 8rem;
+}
+
+.c-trophy-2-win {
+    display: none;
+    height: 8rem;
+}
+
+.c-trophy-1-lose {
+    display: none;
+    height: 8rem;
+}
+
+.c-trophy-2-lose {
+    display: none;
+    height: 8rem;
+}
+
+/* sponsor page*/
+
+.o-sponsor-page h1 {
+    font-size: 5rem;
+    text-align: center;
+    margin-bottom: 4rem;
+}
+.c-sponsors {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: 1fr 1fr;
+    width: 75rem;
+    height: 35rem;
+}
+
+.c-sponsor-item {
+    width: 19rem;
+    height: 14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    background-color: var(--global-color-white);
+    border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
+}
+
+.c-sponsor-img {
+    width: 17rem;
+    height: 12rem;
+    object-fit: contain;
+    border-radius: 1rem;
+}
+
+.c-countdown {
+    font-size: 5rem;
+    font-weight: bold;
+}
+
+/* club page*/
+
+.c-club {
+    display: grid;
+    grid-template-columns: 32rem 20rem 20rem;
+    grid-template-rows: 15rem 15rem 15rem;
+}
+
+.c-club-sponsor-bg {
+    height: 13rem;
+    width: 18rem;
+    background-color: var(--global-color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
+
+.c-clublogo-bg {
+    width: 30rem;
+    height: 28rem;
+    background-color: var(--global-color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
+    margin: auto;
+    grid-row: span 2;
+}
+
+.c-club-sponsor {
+    width: 16rem;
+    height: 11rem;
+    object-fit: contain;
+}
+
+.c-clublogo {
+    width: 33rem;
+    height: 18rem;
+    object-fit: contain;
+}
+
+.c-reset-bg {
+    grid-column: span 2;
+    background-color: var(--global-color-black);
+    height: 13rem;
+    width: 50rem;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 0.75rem rgba(0, 0, 0, 0.5);
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.c-reset-bg span{
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--global-color-white);
+}
